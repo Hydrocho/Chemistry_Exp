@@ -9,7 +9,63 @@
     <!-- 모바일 드래그 앤 드롭 폴리필 (DragDropTouch - 오류 없고 가벼운 스크립트) -->
     <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.0.20/DragDropTouch.min.js"></script>
 
+    <!-- Tailwind CSS CDN (Lesson 1 전용, 글로벌 스타일 충돌 방지 위해 preflight 비활성화) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false,
+            }
+        }
+    </script>
+
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Lesson 1 React -> HTML 이식 시 사용했던 커스텀 애니메이션 */
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-6px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,7 +73,7 @@
         <div class="nav-brand" onclick="goHome()"></div>
         <div class="nav-links">
             <a class="nav-item active" id="nav-home" onclick="goHome()">Home</a>
-            <a class="nav-item" id="nav-lesson1" onclick="alert('Lesson 1은 준비 중입니다!')">Lesson 1</a>
+            <a class="nav-item" id="nav-lesson1" onclick="startLesson1()">Lesson 1</a>
             <a class="nav-item" id="nav-lesson2" onclick="startLesson2()">Lesson 2</a>
         </div>
     </nav>
@@ -35,12 +91,12 @@
 
                     <div class="lesson-catalog">
                         <div class="lesson-card">
-                            <div class="lesson-thumbnail">🧊</div>
+                            <div class="lesson-thumbnail">⚛️</div>
                             <div class="lesson-info">
                                 <span class="lesson-tag">Lesson 1</span>
-                                <h2>물질의 상태 변화</h2>
-                                <p>고체, 액체, 기체 분자들이 열에너지에 따라 어떻게 움직이는지 관찰해 봅시다.</p>
-                                <button class="enter-btn" onclick="alert('Lesson 1은 준비 중입니다!')">준비 중...</button>
+                                <h2>물질의 기호 표현</h2>
+                                <p>물질을 기호로 표현하는 방법을 배우고 퀴즈를 통해 암기해 보세요.</p>
+                                <button class="enter-btn" onclick="startLesson1()">학습 시작하기 <i>→</i></button>
                             </div>
                         </div>
 
@@ -57,7 +113,11 @@
                 </div>
             </section>
 
+            <!-- Lesson 1: 화학식 퀴즈 마스터 -->
+            <div id="lesson1-content" style="display: none;"></div>
+
             <!-- Lesson 2: 화학 반응식 마스터 -->
+
             <div id="lesson2-content" style="display: none;">
                 <!-- 기존 0단계: 반응 선택 화면 (Lesson 2의 시작점) -->
                 <section id="step-selection" class="step-content">

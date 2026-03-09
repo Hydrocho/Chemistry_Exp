@@ -18,6 +18,7 @@ export function startLesson2() {
 export function goHome() {
     updateNav('nav-home');
     // 모든 레슨 콘텐츠 숨기기
+    document.getElementById('lesson1-content').style.display = 'none';
     document.getElementById('lesson2-content').style.display = 'none';
     document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
 
