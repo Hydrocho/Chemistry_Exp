@@ -1472,19 +1472,44 @@ input[type="number"]:focus {
 
     /* --- 3단계 계수 조정 --- */
     .equation-interactive-v2 {
-        flex-direction: row !important;
-        flex-wrap: wrap;
-        gap: 10px;
+        display: grid !important;
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas:
+            "reactants reactants reactants"
+            "space arrow products";
+        row-gap: 15px;
+        column-gap: 5px;
+        width: 100%;
+        padding: 5px 0;
         align-items: center;
-        justify-content: flex-start;
-        padding: 10px;
+    }
+
+    .equation-interactive-v2>.term-group:nth-child(1) {
+        grid-area: reactants;
+        justify-self: start;
+    }
+
+    .equation-interactive-v2>.big-arrow {
+        grid-area: arrow;
+        justify-self: end;
+        font-size: 1.8rem;
+        transform: none;
+        /* 오른쪽 방향 유지 */
+        margin: 0;
+    }
+
+    .equation-interactive-v2>.term-group:nth-child(3) {
+        grid-area: products;
+        justify-self: end;
     }
 
     .term-group {
+        display: flex;
+        flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        align-items: center;
         gap: 6px;
-        min-width: unset;
+        width: auto;
     }
 
     .coeff-stepper {
@@ -1508,18 +1533,57 @@ input[type="number"]:focus {
 
     /* --- 원자 대차대조표 --- */
     .balance-sheet-container {
-        flex-direction: column;
-        gap: 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "reactants products"
+            "status status";
+        gap: 10px;
+        padding: 12px 10px;
+    }
+
+    .balance-sheet-container>.balance-side:nth-child(1) {
+        grid-area: reactants;
+    }
+
+    .balance-sheet-container>.balance-side:nth-child(3) {
+        grid-area: products;
     }
 
     .balance-status-center {
+        grid-area: status;
         width: 100%;
-        flex-direction: row;
+        display: flex;
         justify-content: center;
+        margin-top: 5px;
     }
 
     .balance-side {
-        padding: 16px;
+        padding: 12px 8px;
+        min-width: 0;
+        /* 글자가 길 때 터지는 것 방지 */
+    }
+
+    .side-label {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+
+    .symbol-display {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin-bottom: 15px;
+        /* 긴 문자가 넘어갈 때 줄바꿈 */
+        word-break: break-word;
+    }
+
+    .count-list {
+        gap: 6px;
+    }
+
+    .count-item {
+        font-size: 0.95rem;
+        padding: 6px 8px;
     }
 
     /* --- 모달 --- */
