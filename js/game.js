@@ -134,7 +134,7 @@ function initStep3UI() {
             term.innerHTML = `
                 <div class="coeff-stepper">
                     <button class="step-up" onclick="changeCoeff('${id}', 1)">▲</button>
-                    <div class="coeff-value" id="val-${id}">1</div>
+                    <div class="coeff-value ${state.coeffsState[id] === 1 ? 'is-hidden' : ''}" id="val-${id}">${state.coeffsState[id]}</div>
                     <button class="step-down" onclick="changeCoeff('${id}', -1)">▼</button>
                 </div>
                 <span class="formula">${MOLECULES[id].formula}</span>
@@ -232,6 +232,11 @@ export function goToStep(step) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // 2단계 진입 시 강제로 화학식 모드로 전환 (토글 버튼 삭제 대응)
+    if (step === 2) {
+        toggleViewMode('formula');
+    }
+
     // PPT 컨트롤(리셋 버튼)은 레슨 1단계 이상에서만 표시
     const ppt = document.querySelector('.ppt-controls');
     if (ppt) ppt.style.display = (step > 0) ? 'block' : 'none';
@@ -256,7 +261,9 @@ export function changeCoeff(id, delta) {
     const newVal = state.coeffsState[id] + delta;
     if (newVal >= 1 && newVal <= 9) {
         state.coeffsState[id] = newVal;
-        document.getElementById(`val-${id}`).innerText = newVal;
+        const valEl = document.getElementById(`val-${id}`);
+        valEl.innerText = newVal;
+        valEl.classList.toggle('is-hidden', newVal === 1);
         updateBalance();
     }
 }
