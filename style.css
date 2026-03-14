@@ -1832,6 +1832,21 @@ input[type="number"]:focus {
         gap: 12px !important;
     }
 
+    /* 전체 시스템이 짧은 경우 (반응물+화살표+생성물 모두 한 줄) */
+    .equation-interactive-v2.is-full-short {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 15px !important;
+        padding-top: 40px !important;
+        padding-bottom: 40px !important;
+    }
+
+    .equation-interactive-v2.is-full-short .big-arrow {
+        margin: 0 !important;
+    }
+
     /* 짧은 식 - 반응물(왼쪽 그룹): 왼쪽 정렬 */
     .equation-interactive-v2 .term-group.is-short:first-of-type {
         justify-content: flex-start !important;

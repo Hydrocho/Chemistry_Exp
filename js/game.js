@@ -142,16 +142,24 @@ function initStep3UI() {
     const interactiveArea = document.querySelector(`#${lessonPrefix}step3 .equation-interactive-v2`);
     interactiveArea.innerHTML = '';
 
-    const createGroup = (ids) => {
+    const checkIsShort = (ids) => {
+        const totalLength = ids.reduce((sum, id) => sum + (MOLECULES[id].formula ? MOLECULES[id].formula.length : 0), 0);
+        return totalLength <= 10 && ids.length <= 2;
+    };
+
+    const isReactantShort = checkIsShort(state.selectedReaction.reactants);
+    const isProductShort = checkIsShort(state.selectedReaction.products);
+    
+    if (isReactantShort && isProductShort) {
+        interactiveArea.classList.add('is-full-short');
+    } else {
+        interactiveArea.classList.remove('is-full-short');
+    }
+
+    const createGroup = (ids, isShortSide) => {
         const group = document.createElement('div');
         group.className = 'term-group';
-
-        // 판별 로직: 반응 물질들의 총 글자 수 계산
-        const totalLength = ids.reduce((sum, id) => sum + (MOLECULES[id].formula ? MOLECULES[id].formula.length : 0), 0);
-        // 총 글자 수가 7자 이하이면서 두 개 이하의 항일 때만 'is-short' 클래스 부여
-        if (totalLength <= 7 && ids.length <= 2) {
-            group.classList.add('is-short');
-        }
+        if (isShortSide) group.classList.add('is-short');
 
         ids.forEach((id, idx) => {
             const term = document.createElement('div');
@@ -175,12 +183,12 @@ function initStep3UI() {
         return group;
     };
 
-    interactiveArea.appendChild(createGroup(state.selectedReaction.reactants));
+    interactiveArea.appendChild(createGroup(state.selectedReaction.reactants, isReactantShort));
     const arrow = document.createElement('span');
     arrow.className = 'big-arrow';
     arrow.innerText = '→';
     interactiveArea.appendChild(arrow);
-    interactiveArea.appendChild(createGroup(state.selectedReaction.products));
+    interactiveArea.appendChild(createGroup(state.selectedReaction.products, isProductShort));
 }
 
 export function setupInventory() {

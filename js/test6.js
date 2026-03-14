@@ -203,9 +203,17 @@ function render() {
     const badgeClass = state.quizState === 'review' ? 'text-red-700 bg-red-100' : 'text-emerald-700 bg-emerald-100';
     const testLabel = state.quizState === 'review' ? 'REVIEW' : 'TEST';
 
-    const createGroup = (ids) => {
+    const checkIsShort = (ids) => {
         const totalLength = ids.reduce((sum, id) => sum + (MOLECULES[id].formula ? MOLECULES[id].formula.length : 0), 0);
-        const isShort = totalLength <= 7 && ids.length <= 2 ? 'is-short' : '';
+        return totalLength <= 10 && ids.length <= 2;
+    };
+
+    const isReactantShort = checkIsShort(reaction.reactants);
+    const isProductShort = checkIsShort(reaction.products);
+    const fullShortClass = (isReactantShort && isProductShort) ? 'is-full-short' : '';
+
+    const createGroup = (ids, isShortSide) => {
+        const isShort = isShortSide ? 'is-short' : '';
 
         const innerHTML = ids.map((id, idx) => {
             const isHidden = state.coeffs[id] === 1;
@@ -266,10 +274,10 @@ function render() {
             </div>
         </div>
 
-        <div class="equation-interactive-v2 border border-slate-200 rounded-lg shadow-inner" style="min-height: 250px;">
-            ${createGroup(reaction.reactants)}
+        <div class="equation-interactive-v2 ${fullShortClass} border border-slate-200 rounded-lg shadow-inner" style="min-height: 250px;">
+            ${createGroup(reaction.reactants, isReactantShort)}
             <span class="big-arrow">→</span>
-            ${createGroup(reaction.products)}
+            ${createGroup(reaction.products, isProductShort)}
         </div>
 
         <button onclick="submitTest3()" ${state.isChecking ? 'disabled' : ''} class="${btnClass}">
