@@ -6,13 +6,27 @@ import { drag, initDragAndDrop, setOnDropComplete } from './dragdrop.js';
 setOnDropComplete(checkCurrentPhaseCompletion);
 
 export function startLesson2() {
+    state.currentLesson = 2;
     updateNav('nav-lesson2');
     // 홈 화면은 숨기고 레슨 2 콘텐츠 표시
     document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
     document.getElementById('home-view').classList.remove('active');
     document.getElementById('lesson2-content').style.display = 'block';
+    document.getElementById('lesson3-content').style.display = 'none';
 
     goToStep(0); // Lesson 2의 첫 화면 (반응 선택)
+}
+
+export function startLesson3() {
+    state.currentLesson = 3;
+    updateNav('nav-lesson3');
+    // 홈 화면은 숨기고 레슨 3 콘텐츠 표시
+    document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+    document.getElementById('home-view').classList.remove('active');
+    document.getElementById('lesson2-content').style.display = 'none';
+    document.getElementById('lesson3-content').style.display = 'block';
+
+    goToStep(0); // Lesson 3의 첫 화면 (반응 선택)
 }
 
 export function goHome() {
@@ -31,7 +45,7 @@ function updateNav(id) {
     document.getElementById(id).classList.add('active');
 }
 
-export function selectReaction(key) {
+export function selectReaction(key, startStep = 1) {
     state.selectedReaction = REACTIONS[key];
     state.coeffsState = {};
     [...state.selectedReaction.reactants, ...state.selectedReaction.products].forEach(id => {
@@ -39,26 +53,28 @@ export function selectReaction(key) {
     });
 
     initStepUI();
-    goToStep(1);
+    goToStep(startStep);
 }
 
 export function initStepUI() {
-    document.querySelectorAll('.description-text').forEach(el => {
+    const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
+    
+    document.querySelectorAll(`#lesson2-content .description-text, #lesson3-content .description-text`).forEach(el => {
         el.innerText = state.selectedReaction.desc;
         el.onclick = openQuestModal; // 클릭 시 모달 열기
     });
 
     // 2단계 가이드 반응식 대입
-    const step2Guide = document.getElementById('step2-guide');
+    const step2Guide = document.getElementById(lessonPrefix + 'step2-guide');
     if (step2Guide) {
         step2Guide.querySelector('.side:nth-child(1)').innerText = state.selectedReaction.reactants.map(id => MOLECULES[id].name).join(' + ');
         step2Guide.querySelector('.side:nth-child(3)').innerText = state.selectedReaction.products.map(id => MOLECULES[id].name).join(' + ');
     }
 
     // 1단계 슬롯 초기화
-    initSlots('step1', 'slot-name');
+    initSlots(lessonPrefix + 'step1', 'slot-name');
     // 2단계 슬롯 초기화
-    initSlots('step2', 'slot-formula');
+    initSlots(lessonPrefix + 'step2', 'slot-formula');
     // 3단계 인터랙티브 영역 초기화
     initStep3UI();
 }
@@ -118,23 +134,32 @@ function initSlots(stepId, slotClass) {
 }
 
 function initStep3UI() {
-    const guide = document.querySelector('#step3 .name-equation-guide');
+    const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
+    const guide = document.querySelector(`#${lessonPrefix}step3 .name-equation-guide`);
     guide.querySelector('.side:nth-child(1)').innerText = state.selectedReaction.reactants.map(id => MOLECULES[id].name).join(' + ');
     guide.querySelector('.side:nth-child(3)').innerText = state.selectedReaction.products.map(id => MOLECULES[id].name).join(' + ');
 
-    const interactiveArea = document.querySelector('#step3 .equation-interactive-v2');
+    const interactiveArea = document.querySelector(`#${lessonPrefix}step3 .equation-interactive-v2`);
     interactiveArea.innerHTML = '';
 
     const createGroup = (ids) => {
         const group = document.createElement('div');
         group.className = 'term-group';
+
+        // 판별 로직: 반응 물질들의 총 글자 수 계산
+        const totalLength = ids.reduce((sum, id) => sum + (MOLECULES[id].formula ? MOLECULES[id].formula.length : 0), 0);
+        // 총 글자 수가 7자 이하이면서 두 개 이하의 항일 때만 'is-short' 클래스 부여
+        if (totalLength <= 7 && ids.length <= 2) {
+            group.classList.add('is-short');
+        }
+
         ids.forEach((id, idx) => {
             const term = document.createElement('div');
             term.className = 'term';
             term.innerHTML = `
                 <div class="coeff-stepper">
                     <button class="step-up" onclick="changeCoeff('${id}', 1)">▲</button>
-                    <div class="coeff-value ${state.coeffsState[id] === 1 ? 'is-hidden' : ''}" id="val-${id}">${state.coeffsState[id]}</div>
+                    <div class="coeff-value ${state.coeffsState[id] === 1 ? 'is-hidden' : ''}" id="${lessonPrefix}val-${id}">${state.coeffsState[id]}</div>
                     <button class="step-down" onclick="changeCoeff('${id}', -1)">▼</button>
                 </div>
                 <span class="formula">${MOLECULES[id].formula}</span>
@@ -159,9 +184,10 @@ function initStep3UI() {
 }
 
 export function setupInventory() {
+    const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
     let invId;
-    if (state.currentPhase === 1) invId = 'integrated-inventory';
-    else if (state.currentPhase === 2) invId = 'step2-inventory';
+    if (state.currentPhase === 1) invId = lessonPrefix + 'integrated-inventory';
+    else if (state.currentPhase === 2) invId = lessonPrefix + 'step2-inventory';
     else return;
 
     const container = document.getElementById(invId);
@@ -170,11 +196,20 @@ export function setupInventory() {
 
     const mode = (state.currentPhase === 1) ? 'name' : 'interactive';
 
-    // 선택된 반응의 물질들 + 모든 분자 풀에서 섞어서 노출 (방해 요소 추가)
-    const allMoleculeIds = Object.keys(MOLECULES);
-    const shuffledIds = shuffleArray([...allMoleculeIds]);
+    // 선택된 반응의 필수 물질들 추출
+    const requiredIds = [...new Set([...state.selectedReaction.reactants, ...state.selectedReaction.products])];
+    
+    // 필수 물질을 제외한 나머지 분자들 (방해 요소용)
+    const otherIds = Object.keys(MOLECULES).filter(id => !requiredIds.includes(id));
+    
+    // 방해 요소를 섞고 필요한 만큼만 추출 (총 12개가 되도록)
+    const distractorCount = Math.max(0, 12 - requiredIds.length);
+    const selectedDistractors = shuffleArray([...otherIds]).slice(0, distractorCount);
+    
+    // 필수 물질 + 선택된 방해 요소를 합쳐서 다시 섞기
+    const finalIds = shuffleArray([...requiredIds, ...selectedDistractors]);
 
-    shuffledIds.forEach(id => {
+    finalIds.forEach(id => {
         container.appendChild(createMoleculeCard(id, mode, drag));
     });
 
@@ -182,7 +217,8 @@ export function setupInventory() {
 }
 
 export function checkCurrentPhaseCompletion() {
-    const stepPrefix = (state.currentPhase === 1) ? '#step1' : '#step2';
+    const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
+    const stepPrefix = (state.currentPhase === 1) ? `#${lessonPrefix}step1` : `#${lessonPrefix}step2`;
     const slotClass = (state.currentPhase === 1) ? '.slot-name' : '.slot-formula';
 
     // 반응물 영역과 생성물 영역을 구분하여 체크
@@ -217,14 +253,15 @@ export function handleModalAction() {
 
 export function goToStep(step) {
     state.currentPhase = step;
+    const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
 
     document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
 
     let targetId;
-    if (step === 0) targetId = 'step-selection';
-    else if (step === 1) targetId = 'step1';
-    else if (step === 2) targetId = 'step2';
-    else if (step === 3) targetId = 'step3';
+    if (step === 0) targetId = lessonPrefix + 'step-selection';
+    else if (step === 1) targetId = lessonPrefix + 'step1';
+    else if (step === 2) targetId = lessonPrefix + 'step2';
+    else if (step === 3) targetId = lessonPrefix + 'step3';
 
     const target = document.getElementById(targetId);
     if (target) {
@@ -261,7 +298,8 @@ export function changeCoeff(id, delta) {
     const newVal = state.coeffsState[id] + delta;
     if (newVal >= 1 && newVal <= 9) {
         state.coeffsState[id] = newVal;
-        const valEl = document.getElementById(`val-${id}`);
+        const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
+        const valEl = document.getElementById(`${lessonPrefix}val-${id}`);
         valEl.innerText = newVal;
         valEl.classList.toggle('is-hidden', newVal === 1);
         updateBalance();
@@ -293,11 +331,12 @@ export function updateBalance() {
         if (item.r !== item.p) allMatched = false;
     }
 
-    renderAtomDisplay('reactant', state.selectedReaction.reactants, state.coeffsState, atoms, state.currentViewMode);
-    renderAtomDisplay('product', state.selectedReaction.products, state.coeffsState, atoms, state.currentViewMode);
+    const lessonPrefix = state.currentLesson === 3 ? 'l3-' : '';
+    renderAtomDisplay(lessonPrefix + 'reactant', state.selectedReaction.reactants, state.coeffsState, atoms, state.currentViewMode);
+    renderAtomDisplay(lessonPrefix + 'product', state.selectedReaction.products, state.coeffsState, atoms, state.currentViewMode);
 
-    const badge = document.getElementById('balance-badge');
-    const center = document.querySelector('.balance-status-center');
+    const badge = document.getElementById(lessonPrefix + 'balance-badge');
+    const center = document.querySelector(`#${lessonPrefix}step3 .balance-status-center`);
     if (allMatched) {
         badge.innerText = '일치';
         badge.className = 'status-badge match';
@@ -308,14 +347,15 @@ export function updateBalance() {
         center.classList.remove('success');
     }
 
-    document.getElementById('success-celebration').classList.toggle('hidden', !allMatched);
+    document.getElementById(lessonPrefix + 'success-celebration').classList.toggle('hidden', !allMatched);
 }
 
 export function resetGame() {
     // 상태 초기화 후 홈으로 이동
+    const lessonId = state.currentLesson === 3 ? 'lesson3-content' : 'lesson2-content';
     state.selectedReaction = null;
     state.coeffsState = {};
     state.currentPhase = 0;
-    document.getElementById('lesson2-content').style.display = 'none';
+    document.getElementById(lessonId).style.display = 'none';
     goHome();
 }

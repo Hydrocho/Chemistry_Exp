@@ -38,7 +38,9 @@ const allData = [
   { category: '물질 화학식', name: '이산화탄소', symbol: 'CO₂', distractors: ['CO', 'C₂O', 'CO₃'] },
   { category: '물질 화학식', name: '질산은', symbol: 'AgNO₃', distractors: ['Ag₂NO₃', 'AgNO₂', 'Ag(NO₃)₂'] },
   { category: '물질 화학식', name: '과산화수소', symbol: 'H₂O₂', distractors: ['H₂O', 'HO₂', 'HO'] },
-  { category: '물질 화학식', name: '염화나트륨', symbol: 'NaCl', distractors: ['Na₂Cl', 'NaCl₂', 'NCl'] }
+  { category: '물질 화학식', name: '염화나트륨', symbol: 'NaCl', distractors: ['Na₂Cl', 'NaCl₂', 'NCl'] },
+  { category: '물질 화학식', name: '염화 은', symbol: 'AgCl', distractors: ['AgCl₂', 'Ag₂Cl', 'AgC'] },
+  { category: '물질 화학식', name: '질산 나트륨', symbol: 'NaNO₃', distractors: ['Na₂NO₃', 'NaNO₂', 'Na(NO₃)₂'] }
 ];
 
 const shuffleArray = (array) => {
@@ -251,8 +253,15 @@ window.handleLesson1NextQuestion = () => {
 
 window.handleLesson1RetryWrong = () => {
   if (state.countdownInterval) clearInterval(state.countdownInterval);
+  
+  // Reshuffle options for each wrong question to prevent memorizing positions
+  const reshuffledWrongQuestions = state.wrongQuestions.map(q => ({
+    ...q,
+    options: shuffleArray([...q.options])
+  }));
+
   setState({
-    questions: shuffleArray([...state.wrongQuestions]),
+    questions: shuffleArray(reshuffledWrongQuestions),
     currentIdx: 0,
     wrongQuestions: [],
     selectedOption: null,

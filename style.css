@@ -24,11 +24,12 @@
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* 왼쪽 정렬로 변경 */
     align-items: center;
     padding: 0 4%;
     z-index: 1000;
     border-bottom: 1px solid var(--border-color);
+    gap: 20px; /* 요소 간 간격 추가 */
 }
 
 .nav-brand {
@@ -44,6 +45,7 @@
 .nav-links {
     display: flex;
     gap: 35px;
+    margin-left: auto; /* 데스크탑 링크는 오른쪽으로 미룸 */
 }
 
 .nav-item {
@@ -84,6 +86,138 @@
     padding-top: 40px;
 }
 
+/* 모바일 메뉴 버튼 */
+.mobile-menu-btn {
+    display: none;
+    background: transparent; /* 배경 투명하게 */
+    border: none;
+    padding: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.mobile-menu-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.mobile-menu-btn:hover {
+    background: #e2e8f0;
+}
+
+/* 모바일 메뉴 드로어 (Drawer) */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-menu-content {
+    position: absolute;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100%;
+    background: white;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+}
+
+.mobile-menu-overlay.active .mobile-menu-content {
+    left: 0;
+}
+
+.mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.menu-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+.menu-close-btn {
+    background: #f8fafc;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu-group-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin: 20px 0 5px 0;
+}
+
+.mobile-nav-item {
+    text-decoration: none;
+    color: #64748b;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 16px 20px;
+    border-radius: 16px;
+    transition: all 0.2s;
+    background: transparent;
+}
+
+.mobile-nav-item:hover {
+    background: #f1f5f9;
+    color: var(--primary-color);
+}
+
+.mobile-nav-item.active {
+    background: #eff6ff;
+    color: var(--primary-color);
+}
+
+@media (max-width: 992px) {
+    .desktop-only {
+        display: none !important;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
 /* 홈 화면/영웅 섹션 */
 .home-section {
     max-width: 1000px;
@@ -115,6 +249,106 @@
     opacity: 0.9;
     max-width: 600px;
     margin: 0 auto;
+}
+
+/* New Menu List Styles */
+.menu-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-section-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding-left: 10px;
+}
+
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-item {
+    background: white;
+    border-radius: 20px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.menu-item:hover {
+    transform: translateX(10px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(74, 144, 226, 0.1);
+}
+
+.menu-item.test-item:hover {
+    border-color: #6366f1;
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.1);
+}
+
+.menu-icon {
+    width: 60px;
+    height: 60px;
+    background: #f8fafc;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.menu-item:hover .menu-icon {
+    background: var(--primary-light);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.menu-text {
+    flex: 1;
+}
+
+.menu-text h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.menu-text p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.menu-arrow {
+    color: #cbd5e1;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.menu-item:hover .menu-arrow {
+    color: var(--primary-color);
+    transform: translateX(5px);
 }
 
 .lesson-catalog {
@@ -770,9 +1004,10 @@ input[type="number"]:focus {
 }
 
 .plus {
-    font-size: 1.5rem;
-    color: #cbd5e0;
-    font-weight: bold;
+    font-size: 2rem;
+    color: #475569;
+    font-weight: 900;
+    margin: 0 10px;
 }
 
 /* 원자 정보 테이블 */
@@ -1023,20 +1258,31 @@ input[type="number"]:focus {
 /* 3단계 계수 조정 인터페이스 */
 .equation-interactive-v2 {
     display: flex;
+    flex-direction: row; /* 기본적으로 한 줄(가로) 배치 */
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 30px;
     margin: 40px auto;
     padding: 40px;
     background: #f8fafc;
     border-radius: 24px;
-    max-width: 1200px;
+    max-width: 1400px;
+    width: fit-content;
 }
 
 .term-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    flex-wrap: nowrap; /* PC에서는 줄바꿈 방지 */
+    gap: 15px;
+}
+
+.equation-interactive-v2 .term-group:first-of-type {
+    justify-content: center;
+}
+
+.equation-interactive-v2 .term-group:last-of-type {
+    justify-content: center;
 }
 
 .equation-interactive-v2 .term {
@@ -1227,16 +1473,17 @@ input[type="number"]:focus {
 }
 
 .big-arrow {
+    align-self: center; /* 화살표는 항상 가운데 정렬 */
     font-size: 5rem;
     color: #4a90e2;
     font-weight: 800;
-    margin: 0 20px;
+    margin: 0 15px; /* PC에서는 가로 간격 적용 */
 }
 
 .plus {
     font-size: 3.5rem;
-    color: #94a3b8;
-    font-weight: 800;
+    color: #475569;
+    font-weight: 900;
     margin: 0 15px;
 }
 
@@ -1246,9 +1493,9 @@ input[type="number"]:focus {
 }
 
 /* ===========================
-   모바일 반응형 (768px 이하)
+   모바일 및 태블릿 반응형 (1024px 이하)
    =========================== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
 
     /* --- 네비게이션 바 --- */
     .navbar {
@@ -1523,103 +1770,304 @@ input[type="number"]:focus {
         margin: 0 4px;
     }
 
-    /* --- 3단계 계수 조정 --- */
+    /* --- 3단계 계수 조정 (모바일 지그재그 그리드) --- */
     .equation-interactive-v2 {
-        display: grid !important;
-        grid-template-columns: 1fr auto auto;
-        grid-template-areas:
-            "reactants reactants reactants"
-            "space arrow products";
-        row-gap: 15px;
-        column-gap: 5px;
-        width: 100%;
-        padding: 5px 0;
+        display: flex !important;
+        flex-direction: column;
         align-items: center;
+        gap: 20px;
+        width: 100%; /* 좌우 공간을 최대로 확보 */
+        padding: 24px 6px; /* 좌우 내부 여백을 최소한으로 줄임 */
+        border-radius: 6px; /* 모서리 곡률 대폭 축소 (거의 직각) */
+        background: #f8fafc;
+        margin: 15px auto;
+        box-shadow: inset 0 2px 12px rgba(0,0,0,0.03);
     }
 
-    .equation-interactive-v2>.term-group:nth-child(1) {
-        grid-area: reactants;
+    .equation-interactive-v2 .term-group {
+        display: grid !important;
+        grid-template-columns: auto 1fr; /* 첫 번째 항의 너비에 맞게 자동 조절하여 왼쪽 여백 제거 */
+        row-gap: 25px;
+        width: 100%;
+        align-self: stretch !important; /* 부모 중앙 정렬 무시하고 끝까지 확장 */
+        box-sizing: border-box;
+        align-items: center;
+        transform: translateZ(0); 
+    }
+
+    /* 반응물/생성물 지그재그 배치 최적화 (왼쪽/오른쪽 완전 밀착) */
+    .equation-interactive-v2 .term-group .term:nth-of-type(1) {
+        grid-row: 1;
+        grid-column: 1;
         justify-self: start;
     }
-
-    .equation-interactive-v2>.big-arrow {
-        grid-area: arrow;
+    .equation-interactive-v2 .term-group .plus:nth-of-type(1) {
+        grid-row: 1;
+        grid-column: 2;
+        justify-self: start;
+        margin-left: 8px !important;
+    }
+    .equation-interactive-v2 .term-group .term:nth-of-type(2) {
+        grid-row: 2;
+        grid-column: 1 / span 2;
+        justify-self: end; /* 오른쪽 끝으로 바짝 붙음 */
+    }
+    .equation-interactive-v2 .term-group .plus:nth-of-type(2) {
+        grid-row: 2;
+        grid-column: 1;
         justify-self: end;
-        font-size: 1.8rem;
-        transform: none;
-        /* 오른쪽 방향 유지 */
-        margin: 0;
+        margin-right: 145px !important;
+    }
+    .equation-interactive-v2 .term-group .term:nth-of-type(3) {
+        grid-row: 3;
+        grid-column: 1 / span 2;
+        justify-self: start; /* 왼쪽 끝으로 바짝 붙음 */
     }
 
-    .equation-interactive-v2>.term-group:nth-child(3) {
-        grid-area: products;
-        justify-self: end;
+    /* 반응 물질 2개가 짧아서 한 줄에 담길 수 있는 경우 동적 변경 */
+    .equation-interactive-v2 .term-group.is-short {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important; /* 화면을 넘어가면 자연스럽게 줄바꿈 */
+        gap: 12px !important;
     }
 
-    .term-group {
+    /* 짧은 식 - 반응물(왼쪽 그룹): 왼쪽 정렬 */
+    .equation-interactive-v2 .term-group.is-short:first-of-type {
+        justify-content: flex-start !important;
+    }
+
+    /* 짧은 식 - 생성물(오른쪽 그룹): 오른쪽 정렬 */
+    .equation-interactive-v2 .term-group.is-short:last-of-type {
+        justify-content: flex-end !important;
+    }
+
+    /* 짧은 그룹의 자식들은 기존 그리드 속성 파괴 */
+    .equation-interactive-v2 .term-group.is-short .term,
+    .equation-interactive-v2 .term-group.is-short .plus {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        justify-self: auto !important;
+        margin: 0 !important;
+    }
+
+    .equation-interactive-v2 .big-arrow {
+        position: relative;
+        width: 60px; /* 화살표 길이 고정 */
+        height: 24px;
+        margin: 15px 0;
+        color: transparent; /* 기존 문자(→) 숨김 */
+        opacity: 0.9;
+        font-size: 1rem; 
+        letter-spacing: normal;
+        transform: none !important;
+    }
+
+    /* CSS로 왜곡 없는 안정적인 화살표 그리기 */
+    .equation-interactive-v2 .big-arrow::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 3px; /* 화살표 뼈대 두께 */
+        background-color: #60a5fa;
+        transform: translateY(-50%);
+        border-radius: 3px;
+    }
+
+    .equation-interactive-v2 .big-arrow::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 2px;
+        width: 12px;
+        height: 12px;
+        border-top: 3px solid #60a5fa;
+        border-right: 3px solid #60a5fa;
+        transform: translateY(-50%) rotate(45deg);
+        border-radius: 2px;
+    }
+
+    .equation-interactive-v2 .plus {
+        display: block !important;
+        position: static !important;
+        font-size: 2.2rem;
+        color: #1e293b; /* 더 진한 색상 */
+        font-weight: 900; /* 고중량 폰트 적용 */
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    .term {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 6px;
-        width: auto;
+        gap: 0;
+        min-width: 0;
     }
 
     .coeff-stepper {
-        gap: 4px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 35px; /* 숫자가 두 자리가 되어도 버틸 수 있는 충분한 너비 고정 */
+        height: 60px; /* 버튼을 위한 수직 공간 확보 */
+        background: transparent;
+        flex-shrink: 0;
     }
 
-    .step-up,
-    .step-down {
-        padding: 6px 10px;
-        font-size: 1rem;
+    .coeff-stepper button {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        background: none !important;
+        border: none !important;
+        outline: none !important; /* 클릭 시 테두리 방지 */
+        box-shadow: none !important;
+        color: #3b82f6 !important;
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        cursor: pointer;
+        padding: 0;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+        -webkit-tap-highlight-color: transparent; /* 모바일 클릭 하이라이트 제거 */
     }
+
+    .coeff-stepper button:active {
+        transform: none !important; /* 클릭 시 크기 변화 방지 */
+        background: transparent !important;
+    }
+
+    /* 계수가 1이어도 버튼은 명확히 보이도록 */
+    .term:has(.coeff-value.is-hidden) .coeff-stepper button {
+        opacity: 0.8;
+        color: #60a5fa !important;
+    }
+
+    .coeff-stepper .step-up { top: -15px; }
+    .coeff-stepper .step-down { bottom: -15px; }
 
     .coeff-value {
-        font-size: 1.4rem;
-        min-width: 36px;
+        font-size: 2.3rem; /* 크기 약간 조절 */
+        font-weight: 800;
+        color: #1e293b;
+        line-height: 1;
+        /* 숫자 전용 너비를 사용하여 흔들림 방지 */
+        font-variant-numeric: tabular-nums; 
+        text-align: center;
+        width: 100%;
+    }
+
+    /* 계수 1일 때 숨기기 (공간은 유지) */
+    .coeff-value.is-hidden {
+        visibility: hidden;
+        display: block !important;
     }
 
     .term .formula {
-        font-size: 1.4rem;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1e293b;
+        letter-spacing: -1px;
+        margin-left: 0; /* 계수 박스가 이미 35px이므로 0으로 설정하여 물리적 밀착 */
     }
 
-    /* --- 원자 대차대조표 --- */
+    /* 모바일 가로 모드(Landscape) 대응: 반응 전 - 화살표 - 반응 후를 3단으로 배치 (Phone Only) */
+    @media (max-height: 600px) and (orientation: landscape) {
+        .equation-interactive-v2 {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 20px !important;
+            padding: 20px !important;
+            width: 100% !important;
+        }
+
+        .equation-interactive-v2 .term-group {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+
+        /* 반응 전(반응물): 왼쪽 정렬 */
+        .equation-interactive-v2 .term-group:first-of-type {
+            justify-content: flex-start !important;
+            padding-left: 5% !important;
+        }
+
+        /* 반응 후(생성물): 오른쪽 정렬 */
+        .equation-interactive-v2 .term-group:last-of-type {
+            justify-content: flex-end !important;
+            padding-right: 5% !important;
+        }
+
+        /* 그리드 배치 무효화 및 한 줄 정렬 */
+        .equation-interactive-v2 .term-group .term,
+        .equation-interactive-v2 .term-group .plus {
+            grid-row: auto !important;
+            grid-column: auto !important;
+            margin: 0 !important;
+            justify-self: auto !important;
+        }
+
+        .equation-interactive-v2 .big-arrow {
+            align-self: center !important;
+            margin: 5px 10px !important;
+            transform: none !important;
+            width: 70px !important; /* 가로 부분에서 살짝 길게 */
+        }
+
+        .equation-interactive-v2 .plus {
+            font-size: 1.8rem !important;
+        }
+    }
+
+    /* --- 원자 대차대조표 (하단 테두리 박스 스타일) --- */
     .balance-sheet-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-            "reactants products"
-            "status status";
         gap: 10px;
-        padding: 12px 10px;
-    }
-
-    .balance-sheet-container>.balance-side:nth-child(1) {
-        grid-area: reactants;
-    }
-
-    .balance-sheet-container>.balance-side:nth-child(3) {
-        grid-area: products;
+        padding: 5px;
     }
 
     .balance-status-center {
-        grid-area: status;
+        grid-column: 1 / span 2;
+        grid-row: 1; /* 최상단에 상태 표시 */
         width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 5px;
+        margin-bottom: 10px;
     }
 
     .balance-side {
-        padding: 12px 8px;
-        min-width: 0;
-        /* 글자가 길 때 터지는 것 방지 */
+        background: #f1f5f9;
+        border-radius: 16px;
+        padding: 15px 10px;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        grid-row: 2; /* 반응물과 생성물이 같은 높이에 위치하도록 설정 */
     }
 
     .side-label {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
+        color: #64748b;
+        font-weight: 700;
         margin-bottom: 10px;
+    }
+
+    .symbol-display {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #334155;
+        text-align: center;
+        gap: 5px;
     }
 
     .symbol-display {
@@ -1631,19 +2079,42 @@ input[type="number"]:focus {
     }
 
     .count-list {
-        gap: 6px;
+        gap: 4px;
+        width: 100%;
     }
 
     .count-item {
-        font-size: 0.95rem;
-        padding: 6px 8px;
+        font-size: 0.85rem;
+        padding: 4px 6px;
+        word-break: keep-all;
     }
 
     /* --- 모달 --- */
     .modal-content {
-        padding: 28px 20px;
-        border-radius: 20px;
-        width: 94%;
+        flex-direction: column; /* 가로에서 세로로 배치 변경 */
+        padding: 35px 24px;
+        border-radius: 32px;
+        width: 92%;
+        gap: 24px;
+    }
+
+    .modal-text-group {
+        text-align: center; /* 텍스트 중앙 정렬 */
+    }
+
+    .modal-icon {
+        font-size: 3rem;
+        margin-bottom: -10px;
+    }
+
+    .modal-content p {
+        font-size: 1.15rem;
+        word-break: keep-all; /* 단어 단위 줄바꿈으로 가독성 향상 */
+    }
+
+    .modal-next-btn {
+        width: 100%; /* 버튼이 가로로 꽉 차게 */
+        padding: 16px;
     }
 
     #quest-modal .modal-content {
@@ -1717,3 +2188,506 @@ input[type="number"]:focus {
         font-size: 0.8rem;
     }
 }
+
+/* 완료된 테스트 표시 */
+.completed-nav {
+    color: #ef4444 !important; /* Red-500 */
+    font-weight: 900 !important;
+}
+
+.completed-badge {
+    display: inline-block;
+    background-color: #fee2e2;
+    color: #ef4444;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 800;
+    border: 1px solid #fecaca;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.completed-menu-item {
+    border-color: #fee2e2 !important;
+    background-color: #fffafb !important;
+
+}
+
+/* 메모리 매칭 게임 스타일 */
+#memory-match-content {
+    max-width: 900px; /* 가로 확보 */
+    margin: 5px auto;
+    padding: 10px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    max-height: 98vh; /* 전체 높이 제한 */
+    display: flex;
+    flex-direction: column;
+}
+
+.memory-game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1vh;
+    padding: 0 10px;
+}
+
+.memory-game-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.memory-timer {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 8px 15px;
+    border-radius: 12px;
+}
+
+.memory-reset-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.memory-reset-btn:hover {
+    background: #4f46e5;
+    transform: scale(1.05);
+}
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 1vh;
+    perspective: 1000px;
+    flex: 1;
+}
+
+.memory-card {
+    height: 12vh; /* 화면 높이에 비례한 카드 높이 */
+    position: relative;
+    cursor: pointer;
+}
+
+.memory-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.memory-card.flipped .memory-card-inner {
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched .memory-card-inner {
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.memory-card-front, .memory-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.memory-card-front {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.memory-card-back {
+    background: white;
+    border: 3px solid #6366f1;
+    color: #1e293b;
+    transform: rotateY(180deg);
+    padding: 8px;
+}
+
+.memory-card-back.name {
+    border-color: #6366f1;
+}
+
+.memory-card-back.formula {
+    border-color: #a855f7;
+}
+
+.card-content {
+    font-size: 0.95rem;
+    font-weight: 800;
+    word-break: keep-all;
+    line-height: 1.2;
+}
+
+.card-type-label {
+    position: absolute;
+    bottom: 5px;
+    font-size: 0.6rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.memory-footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.memory-back-btn, .memory-ranking-btn {
+    padding: 12px 24px;
+    border-radius: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+}
+
+.memory-back-btn {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.memory-ranking-btn {
+    background: #fffbeb;
+    color: #b45309;
+    border: 2px solid #fde68a;
+}
+
+.memory-back-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.memory-ranking-btn:hover {
+    background: #fef3c7;
+}
+
+
+/* 모바일 대응 */
+
+@media (max-width: 480px) {
+    #memory-match-content {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .memory-grid {
+        gap: 6px;
+    }
+    
+    .card-content {
+        font-size: 0.7rem; /* 카드 수가 많아졌으므로 텍스트 축소 */
+    }
+    
+    .memory-game-title {
+        font-size: 1.1rem;
+    }
+
+    .memory-timer {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+}
+
+/* --- 모던 이름 입력 모달 (Chemistry Lab 스타일) --- */
+#name-input-modal.modal-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.name-input-content {
+    background: white;
+    color: #1e293b;
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 440px;
+    width: 90%;
+}
+
+.retro-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #6366f1;
+    font-weight: 800;
+}
+
+.retro-score {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.letter-slots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.letter-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.letter-box {
+    width: 70px;
+    height: 90px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 900;
+    color: #6366f1;
+    border-radius: 16px;
+    margin: 8px 0;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.retro-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 35px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.retro-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+}
+
+.retro-btn:active {
+    transform: translateY(0);
+}
+
+.emoji-selection {
+    margin: 20px 0;
+}
+
+.section-label {
+    color: #94a3b8;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.emoji-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.emoji-btn {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    font-size: 1.8rem;
+    padding: 8px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.emoji-btn:hover {
+    background: #f1f5f9;
+    transform: scale(1.05);
+}
+
+.emoji-btn.selected {
+    border-color: #6366f1;
+    background: #eef2ff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.submit-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 16px 30px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: 16px;
+    cursor: pointer;
+    margin-top: 25px;
+    width: 100%;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.submit-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+
+/* --- 리더보드 모달 --- */
+.leaderboard-content {
+    background: white;
+    padding: 35px;
+    border-radius: 40px;
+    width: 95%;
+    max-width: 550px; /* 더 넓게 조정 */
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    border-radius: 25px;
+    border: 2px solid #f1f5f9;
+    background: #f8fafc;
+    cursor: pointer;
+    font-weight: 700;
+    color: #94a3b8;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: white;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    padding: 18px 25px;
+    background: #fcfdfe;
+    border: 2px solid #f1f5f9;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.leaderboard-item:hover {
+    transform: translateX(5px);
+    border-color: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.rank {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #cbd5e1;
+    width: 45px; /* 공간 확보 */
+    flex-shrink: 0;
+}
+
+/* 상위권 특별 스타일 */
+.rank-1 { border-color: #fef3c7; background: #fffbeb; }
+.rank-2 { border-color: #f1f5f9; background: #f8fafc; }
+.rank-3 { border-color: #ffedd5; background: #fff7ed; }
+
+.rank-1 .rank { color: #fbbf24; }
+.rank-2 .rank { color: #94a3b8; }
+.rank-3 .rank { color: #f59e0b; }
+
+.player-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 800;
+}
+
+.sentiment {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.player-info .name {
+    font-size: 1.25rem;
+    color: #1e293b;
+    letter-spacing: 0.05em;
+}
+
+.score {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #6366f1;
+    background: #eef2ff;
+    padding: 6px 14px;
+    border-radius: 12px;
+    margin-left: 20px;
+}
+
+.loading, .no-scores {
+    padding: 40px;
+    text-align: center;
+    color: #94a3b8;
+    font-weight: 600;
+}
+

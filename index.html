@@ -9,6 +9,9 @@
     <!-- 모바일 드래그 앤 드롭 폴리필 (DragDropTouch - 오류 없고 가벼운 스크립트) -->
     <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.0.20/DragDropTouch.min.js"></script>
 
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- Tailwind CSS CDN (Lesson 1 전용, 글로벌 스타일 충돌 방지 위해 preflight 비활성화) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -70,13 +73,52 @@
 
 <body>
     <nav class="navbar">
-        <div class="nav-brand" onclick="goHome()"></div>
-        <div class="nav-links">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+        </button>
+        <div class="nav-brand" onclick="goHome()">Chemistry Lab</div>
+        <div class="nav-links desktop-only">
             <a class="nav-item active" id="nav-home" onclick="goHome()">Home</a>
             <a class="nav-item" id="nav-lesson1" onclick="startLesson1()">Lesson 1</a>
             <a class="nav-item" id="nav-lesson2" onclick="startLesson2()">Lesson 2</a>
+            <a class="nav-item" id="nav-lesson3" onclick="startLesson3()">Lesson 3</a>
+            <a class="nav-item" id="nav-test1" onclick="startTest1()">Test 1</a>
+            <a class="nav-item" id="nav-test2" onclick="startTest2()">Test 2</a>
+            <a class="nav-item" id="nav-test3" onclick="startTest3()">Test 3</a>
+            <a class="nav-item" id="nav-test4" onclick="startTest4()">Test 4</a>
+            <a class="nav-item" id="nav-test5" onclick="startTest5()">Test 5</a>
+            <a class="nav-item" id="nav-test6" onclick="startTest6()">Test 6</a>
+            <a class="nav-item" id="nav-memory-match" onclick="startMemoryMatch()">Game</a>
         </div>
     </nav>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu" class="mobile-menu-overlay">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <span class="menu-title">Menu</span>
+                <button class="menu-close-btn" onclick="toggleMobileMenu()">×</button>
+            </div>
+            <div class="mobile-menu-links">
+                <a class="mobile-nav-item active" id="m-nav-home" onclick="goHome(); toggleMobileMenu()">🏠 Home</a>
+                <div class="menu-group-label">Lessons</div>
+                <a class="mobile-nav-item" id="m-nav-lesson1" onclick="startLesson1(); toggleMobileMenu()">⚛️ Lesson 1</a>
+                <a class="mobile-nav-item" id="m-nav-lesson2" onclick="startLesson2(); toggleMobileMenu()">⚗️ Lesson 2</a>
+                <a class="mobile-nav-item" id="m-nav-lesson3" onclick="startLesson3(); toggleMobileMenu()">🧪 Lesson 3</a>
+                <div class="menu-group-label">Tests</div>
+                <a class="mobile-nav-item" id="m-nav-test1" onclick="startTest1(); toggleMobileMenu()">📝 Test 1</a>
+                <a class="mobile-nav-item" id="m-nav-test2" onclick="startTest2(); toggleMobileMenu()">🔢 Test 2</a>
+                <a class="mobile-nav-item" id="m-nav-test3" onclick="startTest3(); toggleMobileMenu()">🧪 Test 3</a>
+                <a class="mobile-nav-item" id="m-nav-test4" onclick="startTest4(); toggleMobileMenu()">🛠️ Test 4</a>
+                <a class="mobile-nav-item" id="m-nav-test5" onclick="startTest5(); toggleMobileMenu()">🧪 Test 5</a>
+                <a class="mobile-nav-item" id="m-nav-test6" onclick="startTest6(); toggleMobileMenu()">🏆 Test 6</a>
+                <div class="menu-group-label">Bonus</div>
+                <a class="mobile-nav-item" id="m-nav-memory-match" onclick="startMemoryMatch(); toggleMobileMenu()">🧩 Matching Game</a>
+            </div>
+        </div>
+    </div>
 
     <div class="app-container">
 
@@ -84,29 +126,102 @@
             <!-- 홈 화면 / 레슨 선택 -->
             <section id="home-view" class="step-content active">
                 <div class="home-section">
-                    <div class="hero-banner">
-                        <h1>Chemistry Adventure</h1>
-                        <p>원자와 분자의 세계로 떠나는 신나는 화학 여행! 교과서 속 실험을 직접 체험해 보세요.</p>
-                    </div>
 
-                    <div class="lesson-catalog">
-                        <div class="lesson-card">
-                            <div class="lesson-thumbnail">⚛️</div>
-                            <div class="lesson-info">
-                                <span class="lesson-tag">Lesson 1</span>
-                                <h2>물질의 기호 표현</h2>
-                                <p>물질을 기호로 표현하는 방법을 배우고 퀴즈를 통해 암기해 보세요.</p>
-                                <button class="enter-btn" onclick="startLesson1()">학습 시작하기 <i>→</i></button>
+                    <div class="menu-list-container">
+                        <div class="menu-section">
+                            <h2 class="menu-section-title">학습 단계 (Lessons)</h2>
+                            <div class="menu-list">
+                                <div class="menu-item" onclick="startLesson1()">
+                                    <div class="menu-icon">⚛️</div>
+                                    <div class="menu-text">
+                                        <h3>Lesson 1: 물질의 기호 표현</h3>
+                                        <p>원소 기호와 화학식의 기초를 배우고 퀴즈를 풀어보세요.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item" onclick="startLesson2()">
+                                    <div class="menu-icon">⚗️</div>
+                                    <div class="menu-text">
+                                        <h3>Lesson 2: 화학 반응식 마스터</h3>
+                                        <p>반응물과 생성물을 배치하고 모형으로 반응을 이해합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item" onclick="startLesson3()">
+                                    <div class="menu-icon">🧪</div>
+                                    <div class="menu-text">
+                                        <h3>Lesson 3: 계수 맞추기 집중 학습</h3>
+                                        <p>반응식의 계수를 맞추어 원자의 개수를 맞추는 연습을 합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="lesson-card">
-                            <div class="lesson-thumbnail">⚗️</div>
-                            <div class="lesson-info">
-                                <span class="lesson-tag">Lesson 2</span>
-                                <h2>화학 반응식 마스터</h2>
-                                <p>물질들이 만나 새로운 물질이 되는 과정을 배우고, 화학 반응식을 직접 완성해 보세요.</p>
-                                <button class="enter-btn" onclick="startLesson2()">학습 시작하기 <i>→</i></button>
+                        <div class="menu-section">
+                            <h2 class="menu-section-title">평가 단계 (Tests)</h2>
+                            <div class="menu-list">
+                                <div class="menu-item test-item" onclick="startTest1()">
+                                    <div class="menu-icon">📝</div>
+                                    <div class="menu-text">
+                                        <h3>Test 1: 화학식 테스트</h3>
+                                        <p>기초 화학식 암기 상태를 최종 점검합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item test-item" onclick="startTest2()">
+                                    <div class="menu-icon">🔢</div>
+                                    <div class="menu-text">
+                                        <h3>Test 2: 원자 개수 세기 (모형)</h3>
+                                        <p>분자 모형을 보고 각 원자의 개수를 정확히 파악합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item test-item" onclick="startTest3()">
+                                    <div class="menu-icon">🧪</div>
+                                    <div class="menu-text">
+                                        <h3>Test 3: 원자 개수 세기 (화학식)</h3>
+                                        <p>화학식 만을 보고 원자의 종류와 개수를 계산합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item test-item" onclick="startTest4()">
+                                    <div class="menu-icon">🛠️</div>
+                                    <div class="menu-text">
+                                        <h3>Test 4: 이름 매칭 테스트</h3>
+                                        <p>반응물과 생성물의 이름을 정확하게 배치하는 연습을 합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item test-item" onclick="startTest5()">
+                                    <div class="menu-icon">🧪</div>
+                                    <div class="menu-text">
+                                        <h3>Test 5: 화학식 매칭 테스트</h3>
+                                        <p>물질의 이름을 보고 알맞은 화학식을 연결하는 연습을 합니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                                <div class="menu-item test-item" onclick="startTest6()">
+                                    <div class="menu-icon">🏆</div>
+                                    <div class="menu-text">
+                                        <h3>Test 6: 최종 챌린지</h3>
+                                        <p>모든 화학 반응식을 스스로 완성하는 최종 관문입니다.</p>
+                                    </div>
+                                    <div class="menu-arrow"><i>→</i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-section">
+                            <h2 class="menu-section-title">쉬어가는 코너 (Bonus)</h2>
+                            <div class="menu-list">
+                                <div class="menu-item" onclick="startMemoryMatch()" style="border-color: #a855f7; background: #faf5ff;">
+                                    <div class="menu-icon" style="background: #f3e8ff;">🧩</div>
+                                    <div class="menu-text">
+                                        <h3>화학 매칭 게임</h3>
+                                        <p>분자 이름과 화학식의 짝을 맞춰보세요! (기록 측정)</p>
+                                    </div>
+                                    <div class="menu-arrow"><i style="color: #a855f7;">→</i></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -115,6 +230,39 @@
 
             <!-- Lesson 1: 화학식 퀴즈 마스터 -->
             <div id="lesson1-content" style="display: none;"></div>
+
+            <!-- Test 1: 화학식 테스트 -->
+            <div id="test1-content" style="display: none;"></div>
+
+            <!-- Test 2: 원자 개수 세기 (모형) -->
+            <div id="test2-content" style="display: none;"></div>
+
+            <!-- Test 3: 원자 개수 세기 (화학식) -->
+            <div id="test3-content" style="display: none;"></div>
+
+            <!-- Test 4: 이름 매칭 테스트 -->
+            <div id="test4-content" style="display: none;"></div>
+
+            <!-- Test 5: 개발 중 -->
+            <div id="test5-content" style="display: none;"></div>
+
+            <!-- Test 6: 화학 반응식 완성 (최종) -->
+            <div id="test6-content" style="display: none;"></div>
+
+            <!-- Memory Match: 쉬어가는 코너 -->
+            <div id="memory-match-content" style="display: none;"></div>
+
+            <!-- Coming Soon Placeholder View -->
+            <section id="coming-soon-view" class="step-content" style="display: none;">
+                <div class="p-10 text-center bg-white rounded-3xl shadow-xl max-w-2xl mx-auto mt-20">
+                    <div class="w-32 h-32 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-8 text-6xl shadow-inner">🛠️</div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-4" id="coming-soon-title">준비 중입니다</h2>
+                    <p class="text-slate-500 mb-10 text-lg leading-relaxed">선생님께서 더 알찬 학습 내용을 준비하고 계십니다.<br>조금만 기다려 주세요! 곧 만날 수 있을 거예요.</p>
+                    <button onclick="goHome()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-lg active:scale-95 text-xl">
+                        홈으로 돌아가기
+                    </button>
+                </div>
+            </section>
 
             <!-- Lesson 2: 화학 반응식 마스터 -->
 
@@ -313,6 +461,155 @@
                 </section>
             </div>
 
+            <!-- Lesson 3: 계수 맞추기 집중 학습 -->
+            <div id="lesson3-content" style="display: none;">
+                <!-- 0단계: 반응 선택 화면 -->
+                <section id="l3-step-selection" class="step-content">
+                    <div class="card selection-card">
+                        <h2 class="selection-title">반응을 선택하면 바로 <span style="color: #6366f1; font-weight: 800;">3단계(계수 맞추기)</span>로 이동합니다</h2>
+                        <div class="selection-grid">
+                            <button class="select-btn" onclick="selectReaction('hydrogen', 3)">
+                                <span class="btn-title">💧 1. 수소와 산소의 반응</span>
+                                <span class="btn-desc">수소와 산소가 반응하면 물이 생성된다.</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('ammonia_synthesis', 3)">
+                                <span class="btn-title">🌫️ 2. 암모니아 생성</span>
+                                <span class="btn-desc">질소와 수소가 만나 암모니아를 생성한다.</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('h2o2_decomposition', 3)">
+                                <span class="btn-title">🫧 3. 과산화 수소의 분해</span>
+                                <span class="btn-desc">과산화 수소가 물과 산소로 분해되는 반응</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('methane', 3)">
+                                <span class="btn-title">🔥 4. 메테인의 연소</span>
+                                <span class="btn-desc">메테인이 연소되어 이산화 탄소와 물이 생성</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('copper', 3)">
+                                <span class="btn-title">🧱 5. 구리의 연소</span>
+                                <span class="btn-desc">붉은색 구리판을 가열하면 검은색으로 변함</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('silver_nitrate_reaction', 3)">
+                                <span class="btn-title">🧪 6. 앙금 생성 반응</span>
+                                <span class="btn-desc">염화 나트륨과 질산 은 수용액이 만나 염화 은과 질산 나트륨을 생성하는 반응</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('magnesium_combustion', 3)">
+                                <span class="btn-title">✨ 7. 마그네슘의 연소</span>
+                                <span class="btn-desc">공기 중에서 마그네슘을 연소 시키는 반응</span>
+                            </button>
+                            <button class="select-btn" onclick="selectReaction('magnesium_hcl', 3)">
+                                <span class="btn-title">⚗️ 8. 마그네슘과 염산의 반응</span>
+                                <span class="btn-desc">마그네슘과 염산이 반응하여 수소와 염화 마그네슘을 생성</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1단계: 이름 배치하기 -->
+                <section id="l3-step1" class="step-content">
+                    <div class="card">
+                        <div class="step-header">
+                            <div class="step-title-group">
+                                <span class="step-badge">1단계</span>
+                                <h2>반응물과 생성물의 이름 배치하기</h2>
+                            </div>
+                        </div>
+                        <p class="description-text"></p>
+                        <div class="equation-container-v4">
+                            <div class="side-container">
+                                <span class="label">반응물</span>
+                                <div class="drop-zone-v4"></div>
+                            </div>
+                            <span class="big-arrow">→</span>
+                            <div class="side-container">
+                                <span class="label">생성물</span>
+                                <div class="drop-zone-v4"></div>
+                            </div>
+                        </div>
+                        <div class="card-inventory" id="l3-integrated-inventory"></div>
+                    </div>
+                </section>
+
+                <section id="l3-step2" class="step-content">
+                    <div class="card">
+                        <div class="step-header">
+                            <div class="step-title-group">
+                                <span class="step-badge">2단계</span>
+                                <h2>물질을 화학식(또는 모형)으로 나타내기</h2>
+                            </div>
+                        </div>
+                        <p class="description-text"></p>
+                        <div class="name-equation-guide" id="l3-step2-guide">
+                            <div class="side"></div>
+                            <span class="guide-arrow">→</span>
+                            <div class="side"></div>
+                        </div>
+                        <div class="equation-container-v4">
+                            <div class="side-container">
+                                <span class="label">반응물</span>
+                                <div class="drop-zone-v4"></div>
+                            </div>
+                            <span class="big-arrow">→</span>
+                            <div class="side-container">
+                                <span class="label">생성물</span>
+                                <div class="drop-zone-v4"></div>
+                            </div>
+                        </div>
+                        <div class="card-inventory" id="l3-step2-inventory"></div>
+                    </div>
+                </section>
+
+                <!-- 3단계: 계수 맞추기 -->
+                <section id="l3-step3" class="step-content">
+                    <div class="card">
+                        <div class="step-header">
+                            <div class="step-title-group">
+                                <span class="step-badge">3단계</span>
+                                <h2>원자의 종류와 개수 맞추기 (계수 조정)</h2>
+                            </div>
+                            <div class="view-toggle-container">
+                                <span class="toggle-label">표시 모드:</span>
+                                <div class="toggle-switch small">
+                                    <input type="radio" id="l3-st3-mode-formula" name="view-mode-l3" value="formula" checked onchange="toggleViewMode(this.value)">
+                                    <label for="l3-st3-mode-formula">화학식</label>
+                                    <input type="radio" id="l3-st3-mode-model" name="view-mode-l3" value="model" onchange="toggleViewMode(this.value)">
+                                    <label for="l3-st3-mode-model">분자 모형</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="description-text"></p>
+                        <div class="name-equation-guide">
+                            <div class="side"></div>
+                            <span class="guide-arrow">→</span>
+                            <div class="side"></div>
+                        </div>
+                        <div class="equation-interactive-v2"></div>
+                        <div class="balance-sheet-container">
+                            <div class="balance-side">
+                                <h3 class="side-label">반응물</h3>
+                                <div id="l3-reactant-breakdown" class="atom-breakdown-area">
+                                    <div id="l3-reactant-symbols" class="symbol-display"></div>
+                                    <div id="l3-reactant-counts" class="count-list"></div>
+                                </div>
+                            </div>
+                            <div class="balance-status-center">
+                                <div id="l3-balance-badge" class="status-badge mismatch">불일치</div>
+                            </div>
+                            <div class="balance-side">
+                                <h3 class="side-label">생성물</h3>
+                                <div id="l3-product-breakdown" class="atom-breakdown-area">
+                                    <div id="l3-product-symbols" class="symbol-display"></div>
+                                    <div id="l3-product-counts" class="count-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="l3-success-celebration" class="success-hint hidden">
+                            🎉 축하합니다! 모든 원자의 종류와 개수가 일치하여 화학 반응식이 완성되었습니다!
+                        </div>
+                    </div>
+                </section>
+            </div>
+
         </main>
 
         <footer>
@@ -339,6 +636,29 @@
             <h2 id="quest-modal-title">화학 반응 상황</h2>
             <p id="quest-modal-text"></p>
             <button class="modal-next-btn" onclick="closeQuestModal()">확인</button>
+        </div>
+    </div>
+
+    <!-- 레트로 이름 입력 모달 -->
+    <div id="name-input-modal" class="modal-overlay hidden">
+        <!-- JS에서 동적 생성 (nameInput.js) -->
+    </div>
+
+    <!-- 리더보드 모달 -->
+    <div id="leaderboard-modal" class="modal-overlay hidden" onclick="closeLeaderboard()">
+        <div class="modal-content leaderboard-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="menu-section-title" style="text-align: center; font-size: 1.5rem; margin-bottom: 20px;">TOP 10 RANKING</h2>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-period="daily" onclick="switchLeaderboardTab('daily')">오늘</button>
+                <button class="tab-btn" data-period="monthly" onclick="switchLeaderboardTab('monthly')">이번 달</button>
+                <button class="tab-btn" data-period="all" onclick="switchLeaderboardTab('all')">전체</button>
+            </div>
+            <div id="leaderboard-list" class="leaderboard-list">
+                <!-- JS에서 동적 생성 (leaderboard.js) -->
+            </div>
+            <button class="modal-next-btn" style="margin-top: 25px; width: 100%;" onclick="closeLeaderboard()">닫기</button>
         </div>
     </div>
 
