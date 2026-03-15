@@ -72,16 +72,24 @@ export function initBonusGame() {
   }, 50);
 }
 
-window.handleBonusOptionClick = (option) => {
+window.handleBonusOptionClick = (option, btnElement) => {
   if (state.isChecking || state.quizState !== 'playing') return;
   
   const currentQ = state.questions[state.currentIdx];
   const isCorrect = option === currentQ.answer;
 
-  setState({ 
-    selectedOption: option, 
-    isChecking: true 
-  });
+  // 전체 DOM 렌더링을 방지하기 위해 state 값만 조용히 업데이트
+  state.selectedOption = option;
+  state.isChecking = true;
+
+  // DOM 클래스를 직접 조작하여 클릭한 버튼의 색상만 변경 (깜빡임 완벽 차단)
+  if (btnElement) {
+    if (isCorrect) {
+      btnElement.classList.add('correct');
+    } else {
+      btnElement.classList.add('wrong');
+    }
+  }
 
   if (isCorrect) {
     setTimeout(() => {
@@ -144,7 +152,7 @@ function render() {
 
         <div class="grid grid-cols-2 gap-3 sm:gap-4">
           ${q.options.map(opt => `
-            <button onclick="handleBonusOptionClick(${opt})" 
+            <button onclick="handleBonusOptionClick(${opt}, this)" 
               class="bonus-btn group ${state.selectedOption === opt ? (opt === q.answer ? 'correct' : 'wrong') : ''}">
               <span class="text-2xl sm:text-4xl font-black transition-transform group-active:scale-90">${opt}</span>
             </button>
