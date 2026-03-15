@@ -103,12 +103,20 @@ window.handleTest1OptionClick = (option) => {
     setTimeout(() => {
       setState({ isShaking: false });
       setTimeout(() => {
-          let nextUpdates = { selectedOption: null, isChecking: false, attempts: 0, showNextButton: false };
+          let nextUpdates = { 
+            selectedOption: null, 
+            isChecking: false, 
+            attempts: 0, 
+            showNextButton: false 
+          };
+          
           if (state.currentIdx + 1 < state.questions.length) {
             nextUpdates.currentIdx = state.currentIdx + 1;
           } else {
             nextUpdates.quizState = 'result';
           }
+          
+          if (document.activeElement) document.activeElement.blur();
           setState(nextUpdates);
       }, 600);
     }, 400);
@@ -121,6 +129,7 @@ window.handleTest1OptionClick = (option) => {
     }, 400);
   } else {
     setTimeout(() => {
+      if (document.activeElement) document.activeElement.blur();
       setState({ isShaking: false, isChecking: false, selectedOption: null });
     }, 400);
   }
@@ -133,6 +142,7 @@ window.handleTest1NextClick = () => {
     } else {
       nextUpdates.quizState = 'result';
     }
+    if (document.activeElement) document.activeElement.blur();
     setState(nextUpdates);
 };
 
