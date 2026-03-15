@@ -186,7 +186,7 @@ function render() {
       let iconHtml = '';
 
       if (!state.isChecking) {
-        btnClass += "border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700";
+        btnClass += "test1-option-default text-gray-700";
       } else {
         if (isCorrectAnswer && (isSelected || state.attempts >= 2)) {
           btnClass += "border-green-500 bg-green-50 text-green-700";
