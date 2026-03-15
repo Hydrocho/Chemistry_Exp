@@ -61,7 +61,13 @@ export function initBonusGame() {
   state.timerInterval = setInterval(() => {
     if (state.quizState === 'playing') {
       const now = Date.now();
-      setState({ elapsedTime: (now - state.startTime) / 1000 });
+      state.elapsedTime = (now - state.startTime) / 1000;
+      
+      // 타이머 요소만 실시간 업데이트 (전체 렌더링 방지)
+      const timerEl = document.querySelector('.bonus-timer-value');
+      if (timerEl) {
+        timerEl.textContent = state.elapsedTime.toFixed(2) + 's';
+      }
     }
   }, 50);
 }
@@ -119,7 +125,7 @@ function render() {
       <div class="bonus-challenge-ui p-4 sm:p-10">
         <div class="flex justify-between items-center mb-4 sm:mb-6">
           <div class="timer-display font-mono text-2xl sm:text-3xl font-black text-indigo-600 bg-indigo-50 px-4 sm:px-5 py-1.5 sm:py-2 rounded-2xl border-2 border-indigo-100 shadow-sm">
-            ${state.elapsedTime.toFixed(2)}s
+            <span class="bonus-timer-value">${state.elapsedTime.toFixed(2)}s</span>
           </div>
           <div class="text-slate-400 font-black text-lg sm:text-xl uppercase tracking-tighter">
             ${state.currentIdx + 1} <span class="text-slate-200">/</span> ${state.questions.length}
