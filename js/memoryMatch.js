@@ -63,7 +63,7 @@ function renderBoard() {
     container.innerHTML = `
         <div class="memory-game-header">
             <div class="memory-timer" id="memory-timer">시간: 00:00</div>
-            <button class="memory-reset-btn" onclick="window.initMemoryGame()">새 게임</button>
+            <button class="memory-reset-btn" onclick="window.initMemoryGame()">재시작</button>
         </div>
         <div class="memory-grid" id="memory-grid">
             ${state.cards.map((card, index) => `

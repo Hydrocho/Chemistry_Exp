@@ -7,6 +7,7 @@ import { initTest3 } from './js/test3.js';
 import { initTest4 } from './js/test4.js';
 import { initTest5 } from './js/test5.js';
 import { initTest6 } from './js/test6.js';
+import { initBonusGame } from './js/bonusGame.js';
 import { startMemoryMatch } from './js/memoryMatch.js';
 import { showLeaderboard } from './js/leaderboard.js';
 import { showNameInputModal } from './js/nameInput.js';
@@ -21,9 +22,21 @@ window.closeQuestModal = game.closeQuestModal;
 window.openQuestModal = game.openQuestModal;
 window.startLesson3 = game.startLesson3;
 window.goHome = game.goHome;
-window.startMemoryMatch = startMemoryMatch;
+window.startMemoryMatch = function() {
+    hideAllContent();
+    document.getElementById('nav-memory-match').classList.add('active');
+    document.getElementById('m-nav-memory-match').classList.add('active');
+    startMemoryMatch();
+};
 window.showLeaderboard = showLeaderboard;
 window.showNameInputModal = showNameInputModal;
+window.startBonusGame = function() {
+    hideAllContent();
+    document.getElementById('nav-bonus-game').classList.add('active');
+    document.getElementById('m-nav-bonus-game').classList.add('active');
+    document.getElementById('bonus-game-content').style.display = 'block';
+    initBonusGame();
+};
 
 function hideAllContent() {
     document.getElementById('home-view').classList.remove('active');
@@ -37,6 +50,7 @@ function hideAllContent() {
     document.getElementById('test5-content').style.display = 'none';
     document.getElementById('test6-content').style.display = 'none';
     document.getElementById('memory-match-content').style.display = 'none';
+    document.getElementById('bonus-game-content').style.display = 'none';
     document.getElementById('coming-soon-view').style.display = 'none';
     document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));

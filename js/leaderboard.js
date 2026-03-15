@@ -4,12 +4,14 @@ const CACHE_DURATION = 30 * 1000; // 30 seconds
 let cache = {
     // period: { timestamp: 123, data: [...] }
 };
+let currentActiveGameId = 'memory-match'; // Store current game ID context
 
 export async function showLeaderboard(gameId) {
+    currentActiveGameId = gameId || 'memory-match';
     const container = document.getElementById('leaderboard-modal');
     container.classList.remove('hidden');
     
-    renderLeaderboard(gameId, 'daily'); // Default to daily
+    renderLeaderboard(currentActiveGameId, 'daily'); // Default to daily
 }
 export async function renderLeaderboard(gameId, period) {
     const listContainer = document.getElementById('leaderboard-list');
@@ -66,8 +68,7 @@ function formatTime(seconds) {
 }
 
 window.switchLeaderboardTab = function(period) {
-    // We assume gameId is stored or passed elsewhere, for now we assume 'memory-match'
-    renderLeaderboard('memory-match', period);
+    renderLeaderboard(currentActiveGameId, period);
 };
 
 window.closeLeaderboard = function() {
