@@ -331,7 +331,7 @@ function render() {
 
   container.innerHTML = `
     <div class="min-h-screen bg-transparent flex justify-center pb-12 font-sans text-slate-800 py-6" id="tw-root-test6">
-      <div id="test6-container" class="max-w-5xl w-11/12 bg-white rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-300 border border-slate-100/50 mx-auto ${shakeClass}">
+      <div id="test6-container" class="max-w-5xl w-full sm:w-11/12 bg-white rounded-none sm:rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-300 border border-slate-100/50 mx-auto ${shakeClass}">
         ${content}
       </div>
     </div>
