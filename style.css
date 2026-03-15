@@ -1984,7 +1984,7 @@ input[type="number"]:focus {
     .coeff-stepper .step-down { bottom: -15px; }
 
     .coeff-value {
-        font-size: 2.3rem; /* 크기 약간 조절 */
+        font-size: 1.8rem; /* 선생님 요청으로 크기 축소 (2.3rem -> 1.8rem) */
         font-weight: 800;
         color: #1e293b;
         line-height: 1;
@@ -2001,7 +2001,7 @@ input[type="number"]:focus {
     }
 
     .term .formula {
-        font-size: 2.2rem;
+        font-size: 1.8rem; /* 숫자와 크기 일치 (2.2rem -> 1.8rem) */
         font-weight: 800;
         color: #1e293b;
         letter-spacing: -1px;
