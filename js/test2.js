@@ -46,7 +46,10 @@ function generateQuestions() {
         { formula: 'CH₄ + 2O₂', modelIds: ['ch4', 'o2', 'o2'], question: '산소(O) 원자의 개수는?', answer: 4, options: [2, 3, 4, 6] },
         { formula: 'NH₃ + HCl', modelIds: ['nh3', 'hcl'], question: '수소(H) 원자의 개수는?', answer: 4, options: [2, 3, 4, 5] },
     ];
-    return rawData;
+    return rawData.map(q => ({
+        ...q,
+        options: shuffleArray([...q.options])
+    }));
 }
 
 export function initTest2() {

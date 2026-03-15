@@ -55,7 +55,10 @@ function generateQuestions() {
         { formula: 'CaCO₃ + 2HCl', showModel: false, question: '염소(Cl) 원자의 개수는?', answer: 2, options: [1, 2, 3, 4] },
         { formula: '2NaOH + H₂SO₄', showModel: false, question: '수소(H) 원자의 개수는?', answer: 4, options: [2, 4, 6, 8] }
     ];
-    return rawData;
+    return rawData.map(q => ({
+        ...q,
+        options: shuffleArray([...q.options])
+    }));
 }
 
 export function initTest3() {
