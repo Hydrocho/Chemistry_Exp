@@ -60,7 +60,7 @@ function setState(updates) {
   render();
 }
 
-function generateQuestions() {
+export function generateQuestions() {
   let generated = [];
   lesson1Data.forEach((item) => {
     const distractors = item.distractors && item.distractors.length > 0 ? [...item.distractors] : [];

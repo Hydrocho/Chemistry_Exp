@@ -34,7 +34,7 @@ function setState(updates) {
   render();
 }
 
-function generateQuestions() {
+export function generateQuestions() {
     const rawData = [
         // Only Model + Formula questions for Test 2
         { formula: 'H₂O', modelIds: ['h2o'], question: '수소(H) 원자의 개수는?', answer: 2, options: [1, 2, 3, 4] },
