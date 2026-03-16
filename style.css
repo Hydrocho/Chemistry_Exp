@@ -1214,6 +1214,11 @@ input[type="number"]:focus {
     animation: fadeIn 0.3s ease;
 }
 
+#leaderboard-modal.modal-overlay {
+    align-items: center; /* 리더보드는 화면 중앙에 배치 */
+    padding-bottom: 0;
+}
+
 
 .modal-content {
     background: white;
@@ -1265,6 +1270,10 @@ input[type="number"]:focus {
     font-weight: 500;
 }
 
+.modal-header {
+    flex-shrink: 0;
+}
+
 .modal-next-btn {
     background: var(--success-color);
     color: white;
@@ -1276,6 +1285,7 @@ input[type="number"]:focus {
     cursor: pointer;
     transition: all 0.2s;
     box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    flex-shrink: 0;
 }
 
 .modal-next-btn:hover {
@@ -2691,10 +2701,12 @@ input[type="number"]:focus {
     width: 95%;
     max-width: 550px;
     max-height: 85vh;
-    overflow-y: auto;
-    overflow-x: hidden; /* 가로 스크롤 방지 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 모달 자체 스크롤 방지 */
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     position: relative;
+    animation: none; /* modal-content 애니메이션과 충돌 방지 */
 }
 
 /* 모바일 전용 스타일 (480px 이하) */
@@ -2769,6 +2781,29 @@ input[type="number"]:focus {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    overflow-y: auto; /* 리스트 부분만 스크롤 가능하게 설정 */
+    flex: 1; /* 가용 공간을 차지하게 하여 스크롤 영역 확보 */
+    padding-right: 8px; /* 스크롤바 공간 확보 */
+    scrollbar-width: thin; /* Firefox 스크롤바 슬림하게 */
+}
+
+/* Chrome/Safari 스크롤바 디자인 */
+.leaderboard-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leaderboard-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 .leaderboard-item {
