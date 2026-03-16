@@ -7,7 +7,7 @@ import { initTest3 } from './js/test3.js';
 import { initTest4 } from './js/test4.js';
 import { initTest5 } from './js/test5.js';
 import { initTest6 } from './js/test6.js';
-import { initTest7 } from './js/test7.js';
+
 import { initBonusGame } from './js/bonusGame.js';
 import { startMemoryMatch } from './js/memoryMatch.js';
 import { showLeaderboard } from './js/leaderboard.js';
@@ -50,7 +50,7 @@ function hideAllContent() {
     document.getElementById('test4-content').style.display = 'none';
     document.getElementById('test5-content').style.display = 'none';
     document.getElementById('test6-content').style.display = 'none';
-    document.getElementById('test7-content').style.display = 'none';
+
     document.getElementById('memory-match-content').style.display = 'none';
     document.getElementById('bonus-game-content').style.display = 'none';
     document.getElementById('coming-soon-view').style.display = 'none';
@@ -141,13 +141,7 @@ window.startTest6 = function () {
     initTest6();
 };
 
-window.startTest7 = function () {
-    hideAllContent();
-    if(document.getElementById('nav-test7')) document.getElementById('nav-test7').classList.add('active');
-    if(document.getElementById('m-nav-test7')) document.getElementById('m-nav-test7').classList.add('active');
-    document.getElementById('test7-content').style.display = 'block';
-    initTest7();
-};
+
 
 window.showComingSoon = function(testName) {
     hideAllContent();
