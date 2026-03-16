@@ -25,6 +25,11 @@ const icons = {
 
 function setState(updates) {
   state = { ...state, ...updates };
+  // Log detailed progress
+  if ((state.quizState === 'playing' || state.quizState === 'review') && state.selectedReaction) {
+      const mode = state.quizState === 'review' ? '오답 복습' : 'Test 6';
+      window.logActivity(`${mode} - ${state.selectedReaction.title} 계수 맞추기`);
+  }
   render();
 }
 
@@ -292,6 +297,9 @@ function render() {
     // perfect score (no retries recorded in score)
     if (state.score === state.total && state.total > 0 && state.quizState === 'result') {
       if (window.setTestCompleted) window.setTestCompleted('test6');
+      window.logActivity('Test 6 완료 (만점!)', { key: 'test6', value: 'completed_perfect' });
+    } else if (state.quizState === 'result') {
+      window.logActivity('Test 6 완료', { key: 'test6', value: 'completed' });
     }
 
     const hasWrong = state.wrongKeys.length > 0;

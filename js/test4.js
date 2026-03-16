@@ -20,6 +20,10 @@ let state = {
 
 function setState(updates) {
     state = { ...state, ...updates };
+    // Log detailed progress
+    if (state.quizState === 'playing' && state.selectedReaction) {
+        window.logActivity(`Test 4 - ${state.selectedReaction.title} 배치 중`);
+    }
     render();
 }
 
@@ -288,6 +292,9 @@ function render() {
         // perfect score (no retries recorded in score)
         if (state.score === state.total && state.total > 0 && state.quizState === 'result') {
             if (window.setTestCompleted) window.setTestCompleted('test4');
+            window.logActivity('Test 4 완료 (만점!)', { key: 'test4', value: 'completed_perfect' });
+        } else if (state.quizState === 'result') {
+            window.logActivity('Test 4 완료', { key: 'test4', value: 'completed' });
         }
 
         const hasWrong = state.wrongKeys.length > 0 || (state.shuffledKeys.length !== REACTION_KEYS.length && state.score < state.total);

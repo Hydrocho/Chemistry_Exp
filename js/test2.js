@@ -31,6 +31,10 @@ const icons = {
 
 function setState(updates) {
   state = { ...state, ...updates };
+  // Log detailed progress
+  if (state.quizState === 'playing') {
+      window.logActivity(`Test 2 - 문제 ${state.currentIdx + 1}`);
+  }
   render();
 }
 
@@ -228,6 +232,9 @@ function render() {
     // perfect score (no retries recorded in score)
     if (state.score === state.questions.length && state.questions.length > 0) {
       if (window.setTestCompleted) window.setTestCompleted('test2');
+      window.logActivity('Test 2 완료 (만점!)', { key: 'test2', value: 'completed_perfect' });
+    } else if (state.quizState === 'result') {
+      window.logActivity('Test 2 완료', { key: 'test2', value: 'completed' });
     }
 
     content = `

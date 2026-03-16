@@ -61,3 +61,76 @@ export async function getTopScores(gameId, limit = 10, period = 'all') {
     }
     return data;
 }
+
+export async function updateStudentActivity(studentId, name, sentiment, activity, testStatusObj = {}) {
+    const client = getSupabase();
+    if (!client) return null;
+
+    // Use upsert to create or update student record based on student_id
+    // Note: This requires student_id to be a unique or primary key for upsert to work as intended, 
+    // or we can just use the name if we assume students have unique names per class.
+    // Better to use student_id as the unique identifier.
+    
+    const updateData = {
+        student_id: studentId,
+        student_name: name,
+        sentiment: sentiment,
+        current_activity: activity,
+        updated_at: new Date().toISOString()
+    };
+
+    // Merge test statuses (test1_status, test2_status, etc.)
+    Object.keys(testStatusObj).forEach(key => {
+        updateData[`${key}_status`] = testStatusObj[key];
+    });
+
+    const { data, error } = await client
+        .from('student_monitoring')
+        .upsert(updateData, { onConflict: 'student_id' });
+
+    if (error) {
+        console.error('Error updating student activity:', error);
+        return null;
+    }
+    return data;
+}
+
+export function subscribeToMonitoring(classPrefix, callback) {
+    const client = getSupabase();
+    if (!client) return null;
+
+    // Filter by class_prefix if provided
+    return client
+        .channel('public:student_monitoring')
+        .on('postgres_changes', { 
+            event: '*', 
+            schema: 'public', 
+            table: 'student_monitoring' 
+        }, (payload) => {
+            // Manual filtering for the starting digits of student_id
+            if (!classPrefix || (payload.new && payload.new.student_id.startsWith(classPrefix))) {
+                callback(payload);
+            }
+        })
+        .subscribe();
+}
+
+export async function getAllStudentsInClass(classPrefix) {
+    const client = getSupabase();
+    if (!client) return [];
+
+    let query = client
+        .from('student_monitoring')
+        .select('*');
+    
+    if (classPrefix) {
+        query = query.like('student_id', `${classPrefix}%`);
+    }
+
+    const { data, error } = await query;
+    if (error) {
+        console.error('Error fetching students:', error);
+        return [];
+    }
+    return data;
+}

@@ -7,11 +7,14 @@ import { initTest3 } from './js/test3.js';
 import { initTest4 } from './js/test4.js';
 import { initTest5 } from './js/test5.js';
 import { initTest6 } from './js/test6.js';
-import { initTest7 } from './js/test7.js';
+
 import { initBonusGame } from './js/bonusGame.js';
 import { startMemoryMatch } from './js/memoryMatch.js';
 import { showLeaderboard } from './js/leaderboard.js';
 import { showNameInputModal } from './js/nameInput.js';
+import { initStudentIdentity } from './js/studentIdentity.js';
+import { updateStudentActivity } from './js/supabaseClient.js';
+
 
 // Global exports for HTML event handlers
 window.selectReaction = game.selectReaction;
@@ -27,15 +30,26 @@ window.startMemoryMatch = function() {
     hideAllContent();
     document.getElementById('nav-memory-match').classList.add('active');
     document.getElementById('m-nav-memory-match').classList.add('active');
+    window.logActivity('화학식 외우기 게임');
     startMemoryMatch();
 };
 window.showLeaderboard = showLeaderboard;
 window.showNameInputModal = showNameInputModal;
+window.logActivity = function(activity, testStatus = null) {
+    const id = localStorage.getItem('student_id');
+    const name = localStorage.getItem('student_name');
+    const sentiment = localStorage.getItem('sentiment');
+    if (id && name) {
+        updateStudentActivity(id, name, sentiment, activity, testStatus ? { [testStatus.key]: testStatus.value } : {});
+    }
+};
+
 window.startBonusGame = function() {
     hideAllContent();
     document.getElementById('nav-bonus-game').classList.add('active');
     document.getElementById('m-nav-bonus-game').classList.add('active');
     document.getElementById('bonus-game-content').style.display = 'block';
+    window.logActivity('보너스: 원자 갯수 맞추기');
     initBonusGame();
 };
 
@@ -50,7 +64,7 @@ function hideAllContent() {
     document.getElementById('test4-content').style.display = 'none';
     document.getElementById('test5-content').style.display = 'none';
     document.getElementById('test6-content').style.display = 'none';
-    document.getElementById('test7-content').style.display = 'none';
+
     document.getElementById('memory-match-content').style.display = 'none';
     document.getElementById('bonus-game-content').style.display = 'none';
     document.getElementById('coming-soon-view').style.display = 'none';
@@ -76,6 +90,7 @@ window.startLesson1 = function () {
     document.getElementById('nav-lesson1').classList.add('active');
     document.getElementById('m-nav-lesson1').classList.add('active');
     document.getElementById('lesson1-content').style.display = 'block';
+    window.logActivity('Lesson 1');
     initLesson1();
 };
 
@@ -83,6 +98,7 @@ window.startLesson2 = function () {
     hideAllContent();
     document.getElementById('nav-lesson2').classList.add('active');
     document.getElementById('m-nav-lesson2').classList.add('active');
+    window.logActivity('Lesson 2');
     game.startLesson2();
 };
 
@@ -90,6 +106,7 @@ window.startLesson3 = function () {
     hideAllContent();
     document.getElementById('nav-lesson3').classList.add('active');
     document.getElementById('m-nav-lesson3').classList.add('active');
+    window.logActivity('Lesson 3');
     game.startLesson3();
 };
 
@@ -98,6 +115,7 @@ window.startTest1 = function () {
     document.getElementById('nav-test1').classList.add('active');
     document.getElementById('m-nav-test1').classList.add('active');
     document.getElementById('test1-content').style.display = 'block';
+    window.logActivity('Test 1 시작', { key: 'test1', value: 'in_progress' });
     initTest1();
 };
 
@@ -106,6 +124,7 @@ window.startTest2 = function () {
     document.getElementById('nav-test2').classList.add('active');
     document.getElementById('m-nav-test2').classList.add('active');
     document.getElementById('test2-content').style.display = 'block';
+    window.logActivity('Test 2 시작', { key: 'test2', value: 'in_progress' });
     initTest2();
 };
 
@@ -114,6 +133,7 @@ window.startTest3 = function () {
     document.getElementById('nav-test3').classList.add('active');
     document.getElementById('m-nav-test3').classList.add('active');
     document.getElementById('test3-content').style.display = 'block';
+    window.logActivity('Test 3 시작', { key: 'test3', value: 'in_progress' });
     initTest3();
 };
 
@@ -122,6 +142,7 @@ window.startTest4 = function () {
     document.getElementById('nav-test4').classList.add('active');
     document.getElementById('m-nav-test4').classList.add('active');
     document.getElementById('test4-content').style.display = 'block';
+    window.logActivity('Test 4 시작', { key: 'test4', value: 'in_progress' });
     initTest4();
 };
 
@@ -130,6 +151,7 @@ window.startTest5 = function () {
     document.getElementById('nav-test5').classList.add('active');
     document.getElementById('m-nav-test5').classList.add('active');
     document.getElementById('test5-content').style.display = 'block';
+    window.logActivity('Test 5 시작', { key: 'test5', value: 'in_progress' });
     initTest5();
 };
 
@@ -138,16 +160,11 @@ window.startTest6 = function () {
     if(document.getElementById('nav-test6')) document.getElementById('nav-test6').classList.add('active');
     if(document.getElementById('m-nav-test6')) document.getElementById('m-nav-test6').classList.add('active');
     document.getElementById('test6-content').style.display = 'block';
+    window.logActivity('Test 6 시작', { key: 'test6', value: 'in_progress' });
     initTest6();
 };
 
-window.startTest7 = function () {
-    hideAllContent();
-    if(document.getElementById('nav-test7')) document.getElementById('nav-test7').classList.add('active');
-    if(document.getElementById('m-nav-test7')) document.getElementById('m-nav-test7').classList.add('active');
-    document.getElementById('test7-content').style.display = 'block';
-    initTest7();
-};
+
 
 window.showComingSoon = function(testName) {
     hideAllContent();
@@ -194,10 +211,12 @@ window.goHome = function() {
     document.getElementById('nav-home').classList.add('active');
     document.getElementById('m-nav-home').classList.add('active');
     document.getElementById('home-view').classList.add('active');
+    window.logActivity('홈 화면');
 };
 
 window.addEventListener('DOMContentLoaded', () => {
     initDragAndDrop();
+    initStudentIdentity();
     window.goHome(); // Start with home view
     game.toggleViewMode('formula');
 });

@@ -81,16 +81,16 @@
         <div class="nav-brand" onclick="goHome()">Chemistry Lab</div>
         <div class="nav-links desktop-only">
             <a class="nav-item active" id="nav-home" onclick="goHome()">Home</a>
-            <a class="nav-item" id="nav-lesson1" onclick="startLesson1()">Lesson 1</a>
+            <!-- <a class="nav-item" id="nav-lesson1" onclick="startLesson1()">Lesson 1</a>
             <a class="nav-item" id="nav-lesson2" onclick="startLesson2()">Lesson 2</a>
-            <a class="nav-item" id="nav-lesson3" onclick="startLesson3()">Lesson 3</a>
+            <a class="nav-item" id="nav-lesson3" onclick="startLesson3()">Lesson 3</a> -->
             <a class="nav-item" id="nav-test1" onclick="startTest1()">Test 1</a>
             <a class="nav-item" id="nav-test2" onclick="startTest2()">Test 2</a>
             <a class="nav-item" id="nav-test3" onclick="startTest3()">Test 3</a>
             <a class="nav-item" id="nav-test4" onclick="startTest4()">Test 4</a>
             <a class="nav-item" id="nav-test5" onclick="startTest5()">Test 5</a>
             <a class="nav-item" id="nav-test6" onclick="startTest6()">Test 6</a>
-            <a class="nav-item" id="nav-test7" onclick="startTest7()">Test 7</a>
+
             <a class="nav-item" id="nav-memory-match" onclick="startMemoryMatch()">화학식 외우기</a>
             <a class="nav-item" id="nav-bonus-game" onclick="startBonusGame()">원자 갯수 맞추기</a>
         </div>
@@ -105,10 +105,10 @@
             </div>
             <div class="mobile-menu-links">
                 <a class="mobile-nav-item active" id="m-nav-home" onclick="goHome(); toggleMobileMenu()">🏠 Home</a>
-                <div class="menu-group-label">Lessons</div>
+                <!-- <div class="menu-group-label">Lessons</div>
                 <a class="mobile-nav-item" id="m-nav-lesson1" onclick="startLesson1(); toggleMobileMenu()">⚛️ Lesson 1</a>
                 <a class="mobile-nav-item" id="m-nav-lesson2" onclick="startLesson2(); toggleMobileMenu()">⚗️ Lesson 2</a>
-                <a class="mobile-nav-item" id="m-nav-lesson3" onclick="startLesson3(); toggleMobileMenu()">🧪 Lesson 3</a>
+                <a class="mobile-nav-item" id="m-nav-lesson3" onclick="startLesson3(); toggleMobileMenu()">🧪 Lesson 3</a> -->
                 <div class="menu-group-label">Tests</div>
                 <a class="mobile-nav-item" id="m-nav-test1" onclick="startTest1(); toggleMobileMenu()">📝 Test 1</a>
                 <a class="mobile-nav-item" id="m-nav-test2" onclick="startTest2(); toggleMobileMenu()">🔢 Test 2</a>
@@ -116,7 +116,7 @@
                 <a class="mobile-nav-item" id="m-nav-test4" onclick="startTest4(); toggleMobileMenu()">🛠️ Test 4</a>
                 <a class="mobile-nav-item" id="m-nav-test5" onclick="startTest5(); toggleMobileMenu()">🧪 Test 5</a>
                 <a class="mobile-nav-item" id="m-nav-test6" onclick="startTest6(); toggleMobileMenu()">🏆 Test 6</a>
-                <a class="mobile-nav-item" id="m-nav-test7" onclick="startTest7(); toggleMobileMenu()">🔥 Test 7 (통합)</a>
+
                 <div class="menu-group-label">Bonus & Challenges</div>
                 <a class="mobile-nav-item" id="m-nav-memory-match" onclick="startMemoryMatch(); toggleMobileMenu()">🧩 화학식 외우기</a>
                 <a class="mobile-nav-item" id="m-nav-bonus-game" onclick="startBonusGame(); toggleMobileMenu()">⚡ 원자 갯수 맞추기</a>
@@ -132,7 +132,7 @@
                 <div class="home-section">
 
                     <div class="menu-list-container">
-                        <div class="menu-section">
+                        <!-- <div class="menu-section">
                             <h2 class="menu-section-title">학습 단계 (Lessons)</h2>
                             <div class="menu-list">
                                 <div class="menu-item" onclick="startLesson1()">
@@ -160,7 +160,7 @@
                                     <div class="menu-arrow"><i>→</i></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="menu-section">
                             <h2 class="menu-section-title">평가 단계 (Tests)</h2>
@@ -213,14 +213,7 @@
                                     </div>
                                     <div class="menu-arrow"><i>→</i></div>
                                 </div>
-                                <div class="menu-item test-item" onclick="startTest7()" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; border: none;">
-                                    <div class="menu-icon" style="background: rgba(255,255,255,0.2);">🔥</div>
-                                    <div class="menu-text">
-                                        <h3 style="color: white;">Test 7: 전 범위 통합 테스트</h3>
-                                        <p style="color: rgba(255,255,255,0.8);">테스트 1부터 6까지 모든 문항을 한 번에 도전하세요!</p>
-                                    </div>
-                                    <div class="menu-arrow"><i style="color: white; border-color: white;">→</i></div>
-                                </div>
+
                             </div>
                         </div>
                         <div class="menu-section">
@@ -269,8 +262,7 @@
             <!-- Test 6: 화학 반응식 완성 (최종) -->
             <div id="test6-content" style="display: none;"></div>
 
-            <!-- Test 7: 전 범위 통합 테스트 -->
-            <div id="test7-content" style="display: none;"></div>
+
 
             <!-- Memory Match: 쉬어가는 코너 -->
             <div id="memory-match-content" style="display: none;"></div>

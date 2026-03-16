@@ -2875,4 +2875,51 @@ input[type="number"]:focus {
     color: #94a3b8;
     font-weight: 600;
 }
+
+/* 학생 식별 모달 스타일 */
+.student-identity-content {
+    max-width: 400px;
+    padding: 40px;
+}
+
+.identity-form {
+    text-align: left;
+    margin-top: 25px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--primary-color);
+    background: #f8faff;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+.section-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-color);
+}
+
 
