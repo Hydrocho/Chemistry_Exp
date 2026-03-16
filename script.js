@@ -12,8 +12,8 @@ import { initBonusGame } from './js/bonusGame.js';
 import { startMemoryMatch } from './js/memoryMatch.js';
 import { showLeaderboard } from './js/leaderboard.js';
 import { showNameInputModal } from './js/nameInput.js';
-import { initStudentIdentity } from './js/studentIdentity.js';
-import { updateStudentActivity } from './js/supabaseClient.js';
+import { initStudentIdentity, logoutStudent } from './js/studentIdentity.js';
+import { updateStudentActivity, issueCoupon, isTeacherMonitoring } from './js/supabaseClient.js';
 
 
 // Global exports for HTML event handlers
@@ -25,8 +25,72 @@ window.changeCoeff = game.changeCoeff;
 window.closeQuestModal = game.closeQuestModal;
 window.openQuestModal = game.openQuestModal;
 window.startLesson3 = game.startLesson3;
+window.logoutStudent = logoutStudent;
 window.goHome = game.goHome;
+async function checkAllTestsCompleted() {
+    const completed = JSON.parse(localStorage.getItem('completed_tests') || '[]');
+    const requiredTests = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6'];
+    const allDone = requiredTests.every(test => completed.includes(test));
+    
+    if (allDone) {
+        document.getElementById('nav-memory-match')?.classList.remove('locked-game');
+        document.getElementById('nav-bonus-game')?.classList.remove('locked-game');
+        
+        const cardMM = document.getElementById('card-memory-match');
+        const cardBG = document.getElementById('card-bonus-game');
+        if (cardMM) cardMM.classList.remove('locked-game');
+        if (cardBG) cardBG.classList.remove('locked-game');
+
+        // Mobile menu also
+        if (document.getElementById('m-nav-memory-match')) {
+            document.getElementById('m-nav-memory-match').style.opacity = '1';
+            document.getElementById('m-nav-memory-match').style.pointerEvents = 'auto';
+        }
+        if (document.getElementById('m-nav-bonus-game')) {
+            document.getElementById('m-nav-bonus-game').style.opacity = '1';
+            document.getElementById('m-nav-bonus-game').style.pointerEvents = 'auto';
+        }
+
+        // 쿠폰 발급 로직 추가 (선생님이 모니터링 중일 때만!)
+        const studentId = localStorage.getItem('student_id');
+        const studentUuid = localStorage.getItem('student_uuid');
+        const loginType = localStorage.getItem('login_type');
+
+        if (loginType === 'member' && studentId && studentUuid) {
+            // 해당 학급(학번 앞 3자리)의 선생님이 모니터링 중인지 확인
+            const classPrefix = studentId.substring(0, 3);
+            const isMonitoring = await isTeacherMonitoring(classPrefix);
+
+            if (isMonitoring) {
+                const issued = await issueCoupon(studentId, studentUuid);
+                if (issued) {
+                    setTimeout(() => {
+                        alert('🎊 축하합니다! 6개 테스트를 모두 완료하여 [아바타 랜덤 쿠폰]이 발급되었습니다!\n메인 화면의 가방(인벤토리)에서 확인하실 수 있습니다.');
+                    }, 1000);
+                }
+            } else {
+                console.log('선생님이 모니터링 중이 아니어서 쿠폰이 발급되지 않았습니다.');
+            }
+        }
+    } else {
+        // Initial setup for mobile nav (make them gray too)
+        if (document.getElementById('m-nav-memory-match')) {
+            document.getElementById('m-nav-memory-match').style.opacity = '0.5';
+            document.getElementById('m-nav-memory-match').style.pointerEvents = 'none';
+        }
+        if (document.getElementById('m-nav-bonus-game')) {
+            document.getElementById('m-nav-bonus-game').style.opacity = '0.5';
+            document.getElementById('m-nav-bonus-game').style.pointerEvents = 'none';
+        }
+    }
+    return allDone;
+}
+
 window.startMemoryMatch = function() {
+    if (!checkAllTestsCompleted()) {
+        alert('먼저 Test 1부터 Test 6까지 모두 완료해야 도전할 수 있습니다!');
+        return;
+    }
     hideAllContent();
     document.getElementById('nav-memory-match').classList.add('active');
     document.getElementById('m-nav-memory-match').classList.add('active');
@@ -45,6 +109,10 @@ window.logActivity = function(activity, testStatus = null) {
 };
 
 window.startBonusGame = function() {
+    if (!checkAllTestsCompleted()) {
+        alert('먼저 Test 1부터 Test 6까지 모두 완료해야 도전할 수 있습니다!');
+        return;
+    }
     hideAllContent();
     document.getElementById('nav-bonus-game').classList.add('active');
     document.getElementById('m-nav-bonus-game').classList.add('active');
@@ -174,6 +242,16 @@ window.showComingSoon = function(testName) {
 };
 
 window.setTestCompleted = function(testKey) {
+    // Save to localStorage
+    const completed = JSON.parse(localStorage.getItem('completed_tests') || '[]');
+    if (!completed.includes(testKey)) {
+        completed.push(testKey);
+        localStorage.setItem('completed_tests', JSON.stringify(completed));
+    }
+
+    // Check if everything is done to unlock bonuses
+    checkAllTestsCompleted();
+
     // Desktop Nav
     const navId = `nav-${testKey}`;
     const navItem = document.getElementById(navId);
@@ -217,6 +295,7 @@ window.goHome = function() {
 window.addEventListener('DOMContentLoaded', () => {
     initDragAndDrop();
     initStudentIdentity();
+    checkAllTestsCompleted(); // Initial check/lock
     window.goHome(); // Start with home view
     game.toggleViewMode('formula');
 });

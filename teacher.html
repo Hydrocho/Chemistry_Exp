@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>화학 실험실 - 선생님용 실시간 모니터링</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
@@ -24,22 +27,59 @@
             100% { transform: scale(1); }
         }
         .active-pulse { animation: pulse 2s infinite; }
+        
+        #login-overlay { position: fixed; inset: 0; background: #f8fafc; z-index: 9999; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body class="p-4 sm:p-8">
-    <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-            <div>
-                <h1 class="text-3xl font-black text-slate-800 flex items-center gap-3">
-                    <span class="text-4xl">🧪</span> 실시간 학생 모니터링
-                </h1>
-                <p class="text-slate-500 font-medium">실시간으로 학급의 실험실 활동을 확인하세요.</p>
+    <!-- Auth Loading Overlay -->
+    <div id="login-overlay">
+        <div class="bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-100 max-w-md w-full text-center">
+            <div class="text-5xl mb-6">🔒</div>
+            <h2 class="text-2xl font-black text-slate-800 mb-2">선생님 확인 중</h2>
+            <p id="auth-status" class="text-slate-500 mb-8 font-medium">로그인 상태를 확인하고 있습니다...</p>
+            <div class="flex justify-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-            <div class="flex gap-2">
-                <input type="text" id="class-prefix" placeholder="학급 코드 (예: 301)" 
-                    class="px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none font-bold w-40">
-                <button id="start-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-6 py-3 rounded-xl shadow-lg transition-all active:scale-95">
-                    모니터링 시작
+        </div>
+    </div>
+
+    <div id="dashboard-container" class="max-w-7xl mx-auto hidden">
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-black text-slate-800 flex items-center gap-3">
+                        <span class="text-4xl">🧪</span> 실시간 학생 모니터링
+                    </h1>
+                    <p class="text-slate-500 font-medium">실시간으로 학급의 실험실 활동을 확인하세요.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex gap-2">
+                    <select id="class-prefix" 
+                        class="px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none font-bold w-48 bg-white appearance-none cursor-pointer">
+                        <option value="">학급 선택 (전체)</option>
+                        <option value="201">2학년 1반 (201)</option>
+                        <option value="301">3학년 1반 (301)</option>
+                        <option value="302">3학년 2반 (302)</option>
+                        <option value="303">3학년 3반 (303)</option>
+                        <option value="304">3학년 4반 (304)</option>
+                        <option value="305">3학년 5반 (305)</option>
+                        <option value="306">3학년 6반 (306)</option>
+                        <option value="307">3학년 7반 (307)</option>
+                        <option value="308">3학년 8반 (308)</option>
+                        <option value="309">3학년 9반 (309)</option>
+                        <option value="310">3학년 10반 (310)</option>
+                    </select>
+                    <button id="start-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-6 py-3 rounded-xl shadow-lg transition-all active:scale-95">
+                        모니터링 시작
+                    </button>
+                </div>
+                <button id="admin-logout-btn" class="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shadow-sm font-bold text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Log Out</span>
                 </button>
             </div>
         </header>
@@ -63,6 +103,11 @@
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> 연결됨
                 </h2>
             </div>
+            <div class="col-span-2 sm:col-span-4 flex justify-end">
+                <button id="reset-class-btn" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-4 py-2 rounded-lg text-sm transition-all border border-red-200 flex items-center gap-2">
+                    🗑️ 현재 학급 데이터 초기화
+                </button>
+            </div>
         </div>
 
         <div id="monitoring-table" class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-100 hidden">
@@ -74,7 +119,9 @@
                             <th class="px-6 py-4 font-black text-slate-400 text-xs uppercase tracking-widest">이름</th>
                             <th class="px-6 py-4 font-black text-slate-400 text-xs uppercase tracking-widest">현재 활동</th>
                             <th class="px-6 py-4 font-black text-slate-400 text-xs uppercase tracking-widest text-center" colspan="6">테스트 진행 상황 (1~6)</th>
+                            <th class="px-6 py-4 font-black text-slate-400 text-xs uppercase tracking-widest text-center">쿠폰</th>
                             <th class="px-6 py-4 font-black text-slate-400 text-xs uppercase tracking-widest text-right">최근 활동</th>
+                            <th class="px-6 py-4 font-black text-slate-400 text-xs uppercase tracking-widest text-center">관리</th>
                         </tr>
                     </thead>
                     <tbody id="student-list">
@@ -91,10 +138,75 @@
     </div>
 
     <script type="module">
-        import { subscribeToMonitoring, getAllStudentsInClass } from './js/supabaseClient.js';
+        import { getSupabase } from './js/supabaseClient.js';
+
+        async function initAuth() {
+            const loginOverlay = document.getElementById('login-overlay');
+            const dashboardContainer = document.getElementById('dashboard-container');
+            const statusMessage = document.getElementById('auth-status');
+            const adminLogoutBtn = document.getElementById('admin-logout-btn');
+
+            const supabase = getSupabase();
+            if (!supabase) {
+                statusMessage.innerText = "심각한 오류: Supabase 클라이언트를 초기화할 수 없습니다.";
+                return;
+            }
+
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (!session) {
+                    statusMessage.innerText = "로그인이 필요합니다. 이동 중...";
+                    setTimeout(() => {
+                        window.location.href = '/teacher/login';
+                    }, 1500);
+                    return;
+                }
+
+                // Check if user is admin or assistant in admin_registry
+                const { data: adminData, error } = await supabase
+                    .from('admin_registry')
+                    .select('role')
+                    .eq('email', session.user.email)
+                    .maybeSingle();
+
+                if (error || !adminData || (adminData.role !== 'admin' && adminData.role !== 'assistant')) {
+                    statusMessage.innerText = "접근 권한이 없습니다. 선생님 계정으로 로그인해주세요.";
+                    setTimeout(() => {
+                        window.location.href = '/teacher/login';
+                    }, 2000);
+                    return;
+                }
+
+                // Authorized
+                loginOverlay.style.display = 'none';
+                dashboardContainer.style.display = 'block';
+                window.dispatchEvent(new Event('admin-logged-in'));
+                
+                if (adminLogoutBtn) {
+                    adminLogoutBtn.addEventListener('click', async () => {
+                        await supabase.auth.signOut();
+                        window.location.href = '/teacher/login';
+                    });
+                }
+            } catch (err) {
+                console.error("Auth check error:", err);
+                statusMessage.innerText = "인증 확인 중 오류가 발생했습니다.";
+            }
+        }
+
+        // Run auth check
+        initAuth();
+    </script>
+
+    <script type="module">
+        import { subscribeToMonitoring, getAllStudentsInClass, deleteStudent, deleteAllStudentsInClass, setClassMonitoringStatus } from './js/supabaseClient.js';
 
         let students = {};
         let currentClass = '';
+        let currentSubscription = null;
+
+        let heartbeatInterval = null;
 
         const prefixInput = document.getElementById('class-prefix');
         const startBtn = document.getElementById('start-btn');
@@ -102,21 +214,39 @@
         const emptyState = document.getElementById('empty-state');
         const monitoringTable = document.getElementById('monitoring-table');
         const statsBar = document.getElementById('stats-bar');
+        const resetClassBtn = document.getElementById('reset-class-btn');
 
-        startBtn.addEventListener('click', async () => {
+        async function startMonitoring() {
             currentClass = prefixInput.value.trim();
             if (!currentClass) {
-                alert('학급 코드를 입력하세요 (예: 301)');
+                alert('학급을 선택해주세요.');
                 return;
+            }
+            
+            // 이전 심장박동 중지
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            if (currentSubscription) {
+                // ...
             }
 
             startBtn.disabled = true;
-            startBtn.innerText = '로딩 중...';
+            startBtn.innerText = '연결 중...';
+
+            // 1. 처음 시작 시 상태 설정
+            await setClassMonitoringStatus(currentClass, true);
+
+            // 2. 1분마다 "나 아직 보고 있음" 신호 보내기 (Heartbeat)
+            heartbeatInterval = setInterval(async () => {
+                if (currentClass) {
+                    await setClassMonitoringStatus(currentClass, true);
+                    console.log('Monitoring Heartbeat sent for:', currentClass);
+                }
+            }, 60000); // 1분
 
             monitoringTable.classList.remove('hidden');
             statsBar.classList.remove('hidden');
 
-            // 1. Initial Fetch
+            // 3. Initial Fetch
             const initialData = await getAllStudentsInClass(currentClass);
             students = {};
             initialData.forEach(s => {
@@ -124,8 +254,8 @@
             });
             renderList();
 
-            // 2. Subscribe to Realtime
-            subscribeToMonitoring(currentClass, (payload) => {
+            // 4. Subscribe to Realtime
+            currentSubscription = subscribeToMonitoring(currentClass, (payload) => {
                 const newData = payload.new;
                 if (newData) {
                     students[newData.student_id] = newData;
@@ -134,8 +264,32 @@
             });
 
             startBtn.innerText = '모니터링 중';
-            startBtn.classList.replace('bg-blue-600', 'bg-green-600');
+            startBtn.disabled = false;
+            startBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
+        }
+
+        // 페이지를 닫으면 즉시 상태 해제 (컴퓨터를 그냥 끄면 이 부분 대신 5분 체크가 작동함)
+        window.addEventListener('beforeunload', () => {
+            if (currentClass) setClassMonitoringStatus(currentClass, false);
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
         });
+
+        if (startBtn) {
+            startBtn.addEventListener('click', startMonitoring);
+        }
+        
+        if (prefixInput) {
+            prefixInput.addEventListener('change', () => {
+                if (prefixInput.value) startMonitoring();
+            });
+        }
+
+        // Update relative time strings periodically (every 10 seconds)
+        setInterval(() => {
+            if (currentClass || Object.keys(students).length > 0) {
+                renderList();
+            }
+        }, 10000);
 
         function renderList(highlightId = null) {
             const sortedIds = Object.keys(students).sort();
@@ -189,10 +343,22 @@
                                 </td>
                             `;
                         }).join('')}
+                        <td class="px-6 py-5 text-center">
+                            ${s.coupon_issued ? 
+                                '<span class="px-2 py-1 bg-amber-100 text-amber-600 rounded text-[10px] font-black border border-amber-200">쿠폰 발급됨</span>' : 
+                                '<span class="text-[10px] font-bold text-slate-300">-</span>'}
+                        </td>
                         <td class="px-6 py-5 text-right">
                             <span class="text-xs font-black ${isActive ? 'text-blue-500' : 'text-slate-400'}">
                                 ${timeStr}
                             </span>
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            <button onclick="window.confirmDelete('${id}')" class="p-2 hover:bg-red-50 text-slate-300 hover:text-red-500 rounded-lg transition-colors" title="데이터 삭제">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -201,6 +367,40 @@
             document.getElementById('total-count').innerText = `${totalCount}명`;
             document.getElementById('active-count').innerText = `${activeCount}명`;
             document.getElementById('perfect-count').innerText = `${perfectCount}건`;
+        }
+
+        window.confirmDelete = async (studentId) => {
+            if (confirm(`학번 ${studentId} 학생의 모든 기록을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) {
+                const success = await deleteStudent(studentId);
+                if (success) {
+                    delete students[studentId];
+                    renderList();
+                } else {
+                    alert('삭제 중 오류가 발생했습니다.');
+                }
+            }
+        };
+
+        if (resetClassBtn) {
+            resetClassBtn.addEventListener('click', async () => {
+                const classText = currentClass ? `${currentClass} 학급` : '전체';
+                if (confirm(`${classText}의 모든 학생 데이터를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) {
+                    resetClassBtn.disabled = true;
+                    resetClassBtn.innerText = '삭제 중...';
+                    
+                    const success = await deleteAllStudentsInClass(currentClass);
+                    if (success) {
+                        students = {};
+                        renderList();
+                        alert('성공적으로 삭제되었습니다.');
+                    } else {
+                        alert('삭제 중 오류가 발생했습니다.');
+                    }
+                    
+                    resetClassBtn.disabled = false;
+                    resetClassBtn.innerText = '🗑️ 현재 학급 데이터 초기화';
+                }
+            });
         }
     </script>
 </body>

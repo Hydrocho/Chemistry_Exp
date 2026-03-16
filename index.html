@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>화학 반응식 마스터 - 학습 모드</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
 
     <!-- 모바일 드래그 앤 드롭 폴리필 (DragDropTouch - 오류 없고 가벼운 스크립트) -->
     <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.0.20/DragDropTouch.min.js"></script>
@@ -68,6 +69,8 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        .locked-game { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
+        .locked-game::after { content: '🔒 모든 테스트 완료 후 해제'; position: absolute; bottom: 10px; right: 10px; font-size: 0.7rem; background: rgba(0,0,0,0.6); color: white; padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 
@@ -93,6 +96,7 @@
 
             <a class="nav-item" id="nav-memory-match" onclick="startMemoryMatch()">화학식 외우기</a>
             <a class="nav-item" id="nav-bonus-game" onclick="startBonusGame()">원자 갯수 맞추기</a>
+            <a class="nav-item logout-btn" onclick="logoutStudent()" style="color: #ef4444; font-weight: 800; cursor: pointer;">Logout</a>
         </div>
     </nav>
 
@@ -120,6 +124,9 @@
                 <div class="menu-group-label">Bonus & Challenges</div>
                 <a class="mobile-nav-item" id="m-nav-memory-match" onclick="startMemoryMatch(); toggleMobileMenu()">🧩 화학식 외우기</a>
                 <a class="mobile-nav-item" id="m-nav-bonus-game" onclick="startBonusGame(); toggleMobileMenu()">⚡ 원자 갯수 맞추기</a>
+                
+                <div class="menu-divider" style="height: 1px; background: #e2e8f0; margin: 15px 0;"></div>
+                <a class="mobile-nav-item" onclick="logoutStudent(); toggleMobileMenu()" style="color: #ef4444;">🚪 로그아웃 (Logout)</a>
             </div>
         </div>
     </div>

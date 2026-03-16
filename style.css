@@ -2878,8 +2878,12 @@ input[type="number"]:focus {
 
 /* 학생 식별 모달 스타일 */
 .student-identity-content {
-    max-width: 400px;
+    width: 90%;
+    max-width: 550px;
     padding: 40px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .identity-form {
@@ -2920,6 +2924,116 @@ input[type="number"]:focus {
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--text-color);
+}
+
+/* 추가된 로그인 탭 스타일 */
+.login-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 16px;
+}
+
+.login-tab-btn {
+    flex: 1;
+    padding: 14px 10px;
+    background: none;
+    border: none;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.login-tab-btn.active {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.login-help-text {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 15px;
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* 숫자 표시 및 키패드 디자인 (기본 앱 스타일) */
+.box-slots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.input-group {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #475569;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    border-color: var(--primary-color);
+    background: #f8faff;
+    outline: none;
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 25px;
+    transition: all 0.2s;
+}
+
+.login-submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.login-submit-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-pop {
+    animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 
